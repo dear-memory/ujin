@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>본식스냅 계약서</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #f4efe6;
+            --surface-color: #ffffff;
+            --text-main: #201c16;
+            --text-sub: #6b6357;
+            --text-help: #9a9284;
+            --border-color: #e6ddcc;
+            --primary-color: #201c16;
+            --primary-light: #faf6ee;
+            --gold: #a3792f;
+            --gold-soft: #f3e8d0;
+            --error-color: #b0472c;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 60px 20px;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(circle at 12% 8%, rgba(163, 121, 47, 0.07), transparent 40%),
+                radial-gradient(circle at 88% 92%, rgba(163, 121, 47, 0.06), transparent 45%);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.01em;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            background-color: var(--surface-color);
+            padding: 64px 56px;
+            border-radius: 18px;
+            box-shadow: 0 30px 60px -20px rgba(32, 28, 22, 0.14), 0 2px 10px rgba(32, 28, 22, 0.04);
+            border: 1px solid #eee6d6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #d9b972, var(--gold) 45%, #d9b972);
+        }
+
+        .brand-mark {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .brand-mark .line {
+            height: 1px;
+            width: 44px;
+            background: var(--border-color);
+        }
+
+        .brand-mark svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--gold);
+        }
+
+        .step-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--gold);
+            background: var(--gold-soft);
+            padding: 6px 14px;
+            border-radius: 999px;
+            margin-bottom: 18px;
+        }
+
+        .step-pill-wrap { text-align: center; }
+
+        .header {
+            margin-bottom: 48px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 28px;
+        }
+
+        .header h1 {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+            color: var(--primary-color);
+            letter-spacing: -0.01em;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-sub);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 42px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 42px;
+        }
+
+        .input-row > div {
+            flex: 1;
+        }
+
+        .question-title {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            word-break: keep-all;
+            letter-spacing: -0.01em;
+        }
+
+        .required {
+            color: var(--gold);
+            margin-left: 4px;
+            font-weight: normal;
+        }
+
+        .help-text {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-help);
+            margin-top: -4px;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .input-text, .input-textarea {
+            width: 100%;
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            background-color: #fbf9f4;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+        }
+
+        .input-textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        .input-text:focus, .input-textarea:focus {
+            outline: none;
+            background-color: var(--surface-color);
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-soft);
+        }
+
+        .input-text::placeholder, .input-textarea::placeholder {
+            color: #bcb4a2;
+            font-weight: 400;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            position: relative;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: var(--surface-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .option-item:hover {
+            border-color: #d8c9a3;
+            box-shadow: 0 4px 12px rgba(32, 28, 22, 0.05);
+        }
+
+        .option-item.active {
+            border-color: var(--gold);
+            background-color: var(--gold-soft);
+            box-shadow: 0 0 0 1px var(--gold);
+        }
+
+        .option-item input[type="radio"],
+        .option-item input[type="checkbox"] {
+            margin-right: 14px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+
+        .option-label {
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            color: var(--text-main);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #2a251d, var(--primary-color));
+            color: #fdf9ee;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+            margin-top: 24px;
+            letter-spacing: 0.02em;
+            box-shadow: 0 12px 24px -10px rgba(32, 28, 22, 0.4);
+        }
+
+        .submit-btn:hover { background: linear-gradient(135deg, #3a3327, #302b22); }
+        .submit-btn:active { transform: scale(0.99); }
+        .submit-btn:disabled { background: #d9d2c2; color: #8a8272; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .footer {
+            text-align: center;
+            margin-top: 48px;
+            font-size: 12px;
+            color: #b3ab9a;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- 약관 페이지 전용 스타일 --- */
+        .terms-content {
+            background-color: #fbf9f4;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px 26px;
+            height: 480px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--text-sub);
+            margin-bottom: 32px;
+        }
+
+        .terms-content::-webkit-scrollbar { width: 6px; }
+        .terms-content::-webkit-scrollbar-track { background: transparent; }
+        .terms-content::-webkit-scrollbar-thumb { background-color: #d8c9a3; border-radius: 10px; }
+
+        .terms-content h2 {
+            text-align: center;
+            color: var(--primary-color);
+            font-family: 'Noto Serif KR', serif;
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 32px;
+        }
+        .terms-content h3 {
+            color: var(--gold);
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 28px;
+            margin-bottom: 8px;
+        }
+        .consent-question {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .consent-section {
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+        .btn-next-step {
+            max-width: 300px;
+            display: block;
+            margin: 32px auto 0;
+            background: #d9d2c2;
+            box-shadow: none;
+        }
+        /* ------------------------------------- */
+
+        @media (max-width: 640px) {
+            body { padding: 0; background-color: var(--surface-color); background-image: none; }
+            .container { padding: 40px 24px; border-radius: 0; box-shadow: none; border: none; }
+            .container::before { display: none; }
+            .header { margin-bottom: 40px; }
+            .header h1 { font-size: 24px; }
+            .form-group, .input-row { margin-bottom: 36px; }
+            .input-row { flex-direction: column; gap: 36px; }
+            .option-item { padding: 16px; }
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(28, 24, 18, 0.72);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            padding: 44px 32px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.24);
+            border-top: 4px solid var(--gold);
+        }
+
+        .modal-content h3 {
+            font-family: 'Noto Serif KR', serif;
+            color: var(--primary-color);
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .modal-content p {
+            color: var(--text-sub);
+            font-size: 15px;
+            margin-bottom: 32px;
+            word-break: keep-all;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            padding: 16px 0;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: #fdf9ee; }
+        .btn-primary:hover { background-color: #302b22; }
+
+        .btn-secondary { background-color: var(--gold-soft); color: var(--gold); }
+        .btn-secondary:hover { background-color: #ecdcb4; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- STEP 1: 약관 및 동의 화면 (처음에 보임) -->
+    <div id="step1_terms">
+        <div class="brand-mark">
+            <span class="line"></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><polygon points="12,5 17,9 15,16 9,16 7,9" stroke-linejoin="round"/></svg>
+            <span class="line"></span>
+        </div>
+        <div class="step-pill-wrap">
+            <span class="step-pill">STEP 1 · 약관 동의</span>
+        </div>
+        <div class="header" style="border-bottom: none; margin-bottom: 24px; padding-bottom: 0;">
+            <h1 style="text-align: center; font-size: 22px; color: var(--primary-color);">디어메모리 본식스냅 계약 신청서</h1>
+        </div>
+
+        <div class="terms-content">
+            <h2>약관</h2>
+            <p>본 계약 약관은 신랑신부(이하 '이용자'라 합니다)와 디어메모리(이하 '제공자'라 합니다) 간의 서비스 이용과 관련하여 권리와 의무를 명확히 함에 그 목적이 있습니다.</p>
+
+            <h3>제 1조. [계약의 목적]</h3>
+            <p>본 약관은 '이용자'가 '제공자'의 본식 스냅 촬영 서비스를 이용함에 있어 필요한 권리, 의무 및 책임사항 등을 규정함을 목적으로 합니다. 서비스 제공자는 디어메모리가 지정하는 소속 작가로 배정됩니다.</p>
+
+            <h3>제 2조. [서비스 제공 범위]</h3>
+            <p>디어메모리는 서비스를 원활히 제공하기 위해 계약서에 명시된 촬영 및 관련 작업에 대한 내용을 충실히 이행합니다. 이용자는 제공자에게 촬영과 관련된 필요한 정보(식순, 특이사항 등)를 사전에 제공하여야 합니다.</p>
+
+            <h3>제 3조. [계약금]</h3>
+            <p>계약금은 30만원 입금을 원칙으로 하며, 예약금 입금은 계약 신청서 제출 이후 24시간 이내로 합니다. 서비스 이용자는 계약금 입금 후 24시간 이내 환불(계약금 반환)을 요청할 수 있으며, 24시간 이후에는 어떠한 사유로도 환불이 불가합니다.</p>
+
+            <h3>제 4조. [계약의 무효]</h3>
+            <p>계약 신청서가 허위로 작성되었거나 서비스 제공을 위한 필수적 정보가 누락된 경우, 또는 정해진 기한 내에 계약금이 입금되지 않은 경우 계약은 무효 처리됩니다.</p>
+
+            <h3>제 5조. [계약 취소 및 환불]</h3>
+            <p>계약 취소 시 위약금 규정에 따라 처리되며, 예식일까지 남은 기간에 따라 환불 금액이 차등 적용됩니다. 단순 변심으로 인한 취소 시 계약금은 반환되지 않습니다.</p>
+
+            <h3>제 6조. [계약의 성립]</h3>
+            <p>서비스 계약은 이용자가 본 약관에 동의하고 계약금을 입금한 후, 제공자가 이를 최종 확정 안내함으로써 성립됩니다.</p>
+
+            <h3>제 7조. [잔금 입금]</h3>
+            <p>잔금은 예식일 기준 1주 전까지 결제되어야 하며, 미입금 시 촬영이 취소될 수 있습니다.</p>
+
+            <h3>제 8조. [데이터 보존]</h3>
+            <p>디어메모리는 최종 상품 발송 후 일정 기간(보통 1개월) 동안 데이터를 보관하며, 이후에는 고객 정보 보호를 위해 데이터가 영구 삭제됩니다.</p>
+
+            <h3>제 9조. [수정 작업]</h3>
+            <p>사진의 수정(보정)은 디어메모리의 고유한 스타일과 색감으로 진행되며, 과도한 체형 수정이나 배경 합성 등은 불가할 수 있습니다. 무리한 재수정 요구는 거절될 수 있습니다.</p>
+
+            <h3>제 10조. [데이터 파손 및 손실]</h3>
+            <p>불의의 사고(카메라 고장, 메모리카드 오류 등)로 인해 데이터가 파손 또는 손실될 경우, 디어메모리는 이용자에게 피해 정도에 따라 계약금 및 잔금을 전액 환불합니다. 이외의 정신적 피해보상 등 추가적인 보상은 하지 않습니다.</p>
+
+            <h3>제 11조. [저작권 및 초상권]</h3>
+            <p>촬영된 결과물의 저작권은 디어메모리에 있으며, 초상권은 이용자에게 있습니다. 이용자는 상업적 목적이 아닌 개인적 용도로 결과물을 사용할 수 있습니다. 포트폴리오 활용에 동의하신 경우, 디어메모리의 홈페이지 및 SNS 등에 사진이 게재될 수 있습니다.</p>
+
+            <p style="margin-top: 40px; font-weight: 500; text-align: center; color: var(--error-color);">
+                ※ 상기 약관 내용은 임시로 채워진 내용입니다. <br>실제 호스팅 전, 사장님의 실제 약관 내용으로 텍스트를 수정해 주세요.
+            </p>
+        </div>
+
+        <div class="consent-section">
+            <p class="consent-question">위와 같이 약관 동의 및 개인정보를 수집 이용하는 것에 동의하십니까?</p>
+            <div class="options-container" style="max-width: 320px; margin: 0 auto;">
+                <label class="option-item">
+                    <input type="radio" name="agree_terms" value="yes">
+                    <span class="option-label">동의합니다</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="agree_terms" value="no">
+                    <span class="option-label">동의하지 않습니다</span>
+                </label>
+            </div>
+
+            <button type="button" class="submit-btn btn-next-step" id="nextBtn" disabled>계약서 작성하기</button>
+        </div>
+    </div>
+
+    <!-- STEP 2: 본식스냅 계약서 (처음엔 숨겨져 있음, 약관 동의 시 나타남) -->
+    <div id="captureArea" style="display: none;">
+        <div class="step-pill-wrap">
+            <span class="step-pill">STEP 2 · 계약서 작성</span>
+        </div>
+        <div class="header">
+            <h1>본식스냅 계약서</h1>
+            <p>아래 양식을 작성해 주시면 꼼꼼히 확인 후 연락드리겠습니다.</p>
+        </div>
+
+        <form id="contractForm">
+            <div class="input-row">
+                <div>
+                    <label class="question-title">신랑 성함<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="groom_name" placeholder="예) 김민수" required>
+                </div>
+                <div>
+                    <label class="question-title">신랑 연락처<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="groom_phone" placeholder="예) 010-0000-0000" required>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div>
+                    <label class="question-title">신부 성함<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="bride_name" placeholder="예) 이혜빈" required>
+                </div>
+                <div>
+                    <label class="question-title">신부 연락처<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="bride_phone" placeholder="예) 010-0000-0000" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">안내받으실 이메일 주소<span class="required">*</span></label>
+                <span class="help-text">예약 확정 및 최종 안내문이 발송되는 주소입니다.</span>
+                <input type="email" class="input-text" id="customer_email" placeholder="예) dearmemory@naver.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">본식 날짜<span class="required">*</span></label>
+                <input type="text" class="input-text" id="wedding_date" placeholder="예) 27년 10월 26일 토요일" required>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">예식 시간<span class="required">*</span></label>
+                <input type="text" class="input-text" id="wedding_location" placeholder="예) 강남 아펠가모 12시 30분" required>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">본식스냅 상품구성<span class="required">*</span></label>
+                <div class="options-container">
+                    <label class="option-item">
+                        <input type="checkbox" name="snap_type" value="실속형 (앨범 1권)">
+                        <span class="option-label">실속형 (앨범 1권)</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="checkbox" name="snap_type" value="화보형 (앨범 3권)">
+                        <span class="option-label">화보형 (앨범 3권)</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="checkbox" name="snap_type" value="폐백 추가">
+                        <span class="option-label">폐백 추가</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="checkbox" name="snap_type" value="2인 촬영">
+                        <span class="option-label">2인 촬영</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">본식스냅 촬영 시 요청사항 (자세히)<span class="required">*</span> <span style="font-size: 13px; font-weight: normal; color: var(--text-help); margin-left: 4px;">(아직 미정이시면, 추후 톡 채널로 보내주세요)</span></label>
+                <span class="help-text">예시) 신랑신부 위주로 담아주세요. 부모님 사진도 많이 담아주세요.</span>
+                <textarea class="input-textarea" id="shooting_req" placeholder="요청사항을 자유롭게 적어주세요." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">후보정 시 요청사항 (자세히)<span class="required">*</span> <span style="font-size: 13px; font-weight: normal; color: var(--text-help); margin-left: 4px;">(아직 미정이시면, 추후 톡 채널로 보내주세요)</span></label>
+                <textarea class="input-textarea" id="editing_req" placeholder="원하시는 보정 스타일이나 요청사항을 적어주세요." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">기타 요청사항 <span style="font-size: 13px; font-weight: normal; color: var(--text-help); margin-left: 4px;">(아직 미정이시면, 추후 톡 채널로 보내주세요)</span></label>
+                <textarea class="input-textarea" id="other_req" placeholder="기타 궁금하신 점이나 추가 요청사항을 적어주세요."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">포트폴리오 동의<span class="required">*</span> <span style="font-size: 13px; font-weight: normal; color: var(--text-help); margin-left: 4px;">(동의 시 10만원 할인, 동의는 디어메모리에게 큰 힘이 됩니다😊 )</span></label>
+                <div class="options-container">
+                    <label class="option-item">
+                        <input type="radio" name="portrait_rights" value="동의 (SNS 및 블로그 업로드 가능)" required>
+                        <span class="option-label">동의 (SNS 및 블로그 업로드 가능)</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="portrait_rights" value="비동의">
+                        <span class="option-label">비동의</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">알게 되신 경로<span class="required">*</span></label>
+                <div class="options-container" style="margin-bottom: 12px;">
+                    <label class="option-item">
+                        <input type="radio" name="route" value="인스타그램" required>
+                        <span class="option-label">인스타그램</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="route" value="블로그">
+                        <span class="option-label">블로그 검색</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="route" value="지인소개">
+                        <span class="option-label">지인 소개</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="route" value="기타">
+                        <span class="option-label">기타</span>
+                    </label>
+                </div>
+                <input type="text" class="input-text" id="route_other" placeholder="기타 경로를 입력해 주세요 (선택)">
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">인스타그램 아이디 / 블로그 주소</label>
+                <span class="help-text">후기 확인 시 필요합니다 :)</span>
+                <input type="text" class="input-text" id="sns_id" placeholder="ID 또는 주소를 입력해 주세요">
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">계약서 제출하기</button>
+        </form>
+
+        <div class="footer">
+            © Snap Photography Contract
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="successModal">
+    <div class="modal-content">
+        <h3>예약 해 주셔서 감사합니다.</h3>
+        <p>확인 후 메일 드리겠습니다 :)</p>
+        <div class="modal-actions">
+            <button class="modal-btn btn-secondary" id="downloadPdfBtn">📥 방금 작성한 내역 PDF로 저장</button>
+            <button class="modal-btn btn-primary" id="modalCloseBtn">완료 및 닫기</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+    let db = null;
+    let auth = null;
+    let currentUserId = null;
+
+    if (Object.keys(firebaseConfig).length > 0) {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                currentUserId = auth.currentUser?.uid;
+            } catch (error) {
+                console.error("Firebase Auth Error:", error);
+            }
+        };
+        initAuth();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- STEP 1: 약관 동의 및 화면 전환 로직 ---
+        const termsRadios = document.querySelectorAll('input[name="agree_terms"]');
+        const nextBtn = document.getElementById('nextBtn');
+        const step1 = document.getElementById('step1_terms');
+        const captureArea = document.getElementById('captureArea');
+
+        termsRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'yes') {
+                    nextBtn.disabled = false;
+                    nextBtn.style.background = 'linear-gradient(135deg, #2a251d, var(--primary-color))'; // 활성화 시 검은색
+                } else {
+                    nextBtn.disabled = true;
+                    nextBtn.style.background = '#d9d2c2'; // 비동의 시 회색 유지
+                }
+            });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            // 약관 화면(step1)을 숨기고 계약서 화면(captureArea)을 보여줌
+            step1.style.display = 'none';
+            captureArea.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // 화면 맨 위로 이동
+        });
+        // ------------------------------------------
+
+        // --- 옵션 아이템 활성화 로직 ---
+        const allInputs = document.querySelectorAll('.option-item input');
+
+        allInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                const target = e.target;
+                if (target.type === 'radio') {
+                    const group = document.querySelectorAll(`input[name="${target.name}"]`);
+                    group.forEach(radio => {
+                        const parent = radio.closest('.option-item');
+                        if (parent) {
+                            if (radio.checked) {
+                                parent.classList.add('active');
+                            } else {
+                                parent.classList.remove('active');
+                            }
+                        }
+                    });
+                } else if (target.type === 'checkbox') {
+                    const parent = target.closest('.option-item');
+                    if (parent) {
+                        if (target.checked) {
+                            parent.classList.add('active');
+                        } else {
+                            parent.classList.remove('active');
+                        }
+                    }
+                }
+            });
+        });
+
+        // --- 폼 제출 로직 ---
+        const contractForm = document.getElementById('contractForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const modal = document.getElementById('successModal');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+
+        if (contractForm) {
+            contractForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const snapTypes = [];
+                document.querySelectorAll('input[name="snap_type"]:checked').forEach(checked => {
+                    snapTypes.push(checked.value);
+                });
+
+                const portraitChecked = document.querySelector('input[name="portrait_rights"]:checked');
+                const routeChecked = document.querySelector('input[name="route"]:checked');
+
+                const groomName = document.getElementById('groom_name')?.value || '';
+                const groomPhone = document.getElementById('groom_phone')?.value || '';
+                const brideName = document.getElementById('bride_name')?.value || '';
+                const bridePhone = document.getElementById('bride_phone')?.value || '';
+                const combinedNamesAndPhone = `신랑 ${groomName} (${groomPhone}) / 신부 ${brideName} (${bridePhone})`;
+
+                const formData = {
+                    namesAndPhone: combinedNamesAndPhone,
+                    customerEmail: document.getElementById('customer_email')?.value || '',
+                    weddingDate: document.getElementById('wedding_date')?.value || '',
+                    weddingLocationTime: document.getElementById('wedding_location')?.value || '',
+                    snapPackage: snapTypes.join(', '),
+                    shootingRequests: document.getElementById('shooting_req')?.value || '',
+                    editingRequests: document.getElementById('editing_req')?.value || '',
+                    otherRequests: document.getElementById('other_req')?.value || '',
+                    portraitRights: portraitChecked ? portraitChecked.value : '',
+                    discoveryRoute: routeChecked ? routeChecked.value : '',
+                    discoveryRouteOther: document.getElementById('route_other')?.value || '',
+                    snsId: document.getElementById('sns_id')?.value || '',
+                    submittedAt: new Date().toISOString(),
+                    status: 'pending'
+                };
+
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = '제출 중...';
+                }
+
+                try {
+                    if (db && currentUserId) {
+                        const reservationsRef = collection(db, 'artifacts', appId, 'public', 'data', 'reservations');
+                        await addDoc(reservationsRef, formData);
+                    } else {
+                        console.log("Firebase 미연결. 저장될 데이터:", formData);
+                    }
+                    if (modal) modal.style.display = 'flex';
+                } catch (error) {
+                    console.error("Error saving document: ", error);
+                    alert("제출 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '계약서 제출하기';
+                    }
+                }
+            });
+        }
+
+        // --- PDF 다운로드 로직 ---
+        if (downloadPdfBtn) {
+            downloadPdfBtn.addEventListener('click', () => {
+                const originalText = downloadPdfBtn.textContent;
+                downloadPdfBtn.textContent = '⏳ PDF 생성 중...';
+                downloadPdfBtn.disabled = true;
+
+                const element = document.getElementById('captureArea');
+                if(submitBtn) submitBtn.style.display = 'none';
+
+                const opt = {
+                    margin:       10,
+                    filename:     '본식스냅_계약서(고객보관용).pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true, logging: false },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(element).save().then(() => {
+                    if(submitBtn) submitBtn.style.display = 'block';
+                    downloadPdfBtn.textContent = '✅ 다운로드 완료!';
+                    setTimeout(() => {
+                        downloadPdfBtn.textContent = originalText;
+                        downloadPdfBtn.disabled = false;
+                    }, 2000);
+                });
+            });
+        }
+
+        // --- 모달 닫기 및 초기화 로직 ---
+        if (modalCloseBtn) {
+            modalCloseBtn.addEventListener('click', () => {
+                if (modal) modal.style.display = 'none';
+                if(contractForm) {
+                    contractForm.reset();
+                    document.querySelectorAll('.option-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+
+                    // 폼 제출 완료 후 다시 약관 첫 화면(Step 1)으로 완전히 초기화
+                    document.querySelectorAll('input[name="agree_terms"]').forEach(r => r.checked = false);
+                    nextBtn.disabled = true;
+                    nextBtn.style.background = '#d9d2c2';
+                    captureArea.style.display = 'none';
+                    step1.style.display = 'block';
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    });
+</script>
+</body>
+</html>
