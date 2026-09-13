@@ -1,0 +1,18 @@
+{
+  "name": "functions",
+  "description": "디어메모리 본식스냅 계약서 - 접수 알림 및 확인 PDF 발송",
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "scripts": {
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.4.0",
+    "firebase-functions": "^7.3.2",
+    "nodemailer": "^10.0.9",
+    "pdfkit": "^0.20.2"
+  },
+  "private": true
+}
