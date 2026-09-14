@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>본식스냅 계약서</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    
+    <!-- EmailJS 연동 -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() { emailjs.init("Y6IahGiPQUmtzX7SX"); })();
+    </script>
+    
+    <style>
+        :root {
+            --bg-color: #f4f4f4; 
+            --surface-color: #ffffff;
+            --text-main: #111111;
+            --text-sub: #555555;
+            --text-help: #888888;
+            --border-color: #e2e2e2;
+            --primary-color: #111111; 
+            --primary-light: #f9f9f9;
+            --error-color: #d32f2f;
+        }
+
+        * { box-sizing: border-box; font-family: 'Pretendard Variable', Pretendard, sans-serif; }
+
+        body {
+            margin: 0; padding: 60px 20px;
+            background-color: var(--bg-color); color: var(--text-main);
+            line-height: 1.6; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em;
+        }
+
+        .container {
+            max-width: 640px; margin: 0 auto; background-color: var(--surface-color);
+            padding: 64px 56px; border-radius: 8px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+        }
+
+        .header { margin-bottom: 48px; text-align: left; border-bottom: 2px solid var(--primary-color); padding-bottom: 24px; }
+        .header h1 { font-size: 28px; font-weight: 700; margin: 0 0 12px 0; color: var(--primary-color); letter-spacing: -0.03em; }
+        .header p { font-size: 14px; color: var(--text-sub); margin: 0; font-weight: 400; }
+
+        .form-group { margin-bottom: 42px; }
+        
+        .name-phone-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; margin-bottom: 42px;
+        }
+
+        .question-title { display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: var(--primary-color); word-break: keep-all; letter-spacing: -0.02em; }
+        .required { color: var(--error-color); margin-left: 4px; font-weight: normal; }
+        .help-text { display: block; font-size: 13px; font-weight: 400; color: var(--text-help); margin-top: -4px; margin-bottom: 14px; line-height: 1.5; }
+
+        .input-text, .input-textarea {
+            width: 100%; padding: 16px 18px; border: 1px solid var(--border-color);
+            border-radius: 6px; font-size: 15px; background-color: #fafafa;
+            transition: all 0.2s ease; color: var(--text-main);
+        }
+        .input-textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+        .input-text:focus, .input-textarea:focus { outline: none; background-color: var(--surface-color); border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); }
+        .input-text::placeholder, .input-textarea::placeholder { color: #b5b5b5; font-weight: 400; }
+
+        .options-container { display: flex; flex-direction: column; gap: 8px; }
+        .option-item {
+            position: relative; border: 1px solid var(--border-color); border-radius: 6px;
+            padding: 16px 20px; cursor: pointer; transition: all 0.2s ease;
+            background-color: var(--surface-color); display: flex; align-items: center;
+        }
+        .option-item:hover { border-color: #bbbbbb; }
+        .option-item.active { border-color: var(--primary-color); background-color: var(--primary-light); box-shadow: 0 0 0 1px var(--primary-color); }
+        .option-item input[type="radio"], .option-item input[type="checkbox"] { margin-right: 14px; width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; }
+        .option-label { font-size: 15px; font-weight: 500; cursor: pointer; width: 100%; color: var(--text-main); }
+
+        .submit-btn {
+            width: 100%; padding: 20px; background-color: var(--primary-color); color: white;
+            border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s; margin-top: 24px; letter-spacing: 0.02em;
+        }
+        .submit-btn:hover { background-color: #333333; }
+        .submit-btn:disabled { background-color: #cccccc; cursor: not-allowed; transform: none; }
+
+        .footer { text-align: center; margin-top: 48px; font-size: 12px; color: #aaaaaa; letter-spacing: 0.05em; }
+
+        /* 약관 전용 스타일 */
+        .terms-content {
+            background-color: #fafafa; border: 1px solid var(--border-color); border-radius: 6px;
+            padding: 32px 24px; height: 480px; overflow-y: auto; font-size: 13px;
+            line-height: 1.8; color: var(--text-sub); margin-bottom: 32px;
+        }
+        .terms-content::-webkit-scrollbar { width: 6px; }
+        .terms-content::-webkit-scrollbar-track { background: transparent; }
+        .terms-content::-webkit-scrollbar-thumb { background-color: #cccccc; border-radius: 10px; }
+        .terms-content h2 { text-align: center; color: var(--primary-color); font-size: 18px; margin-top: 0; margin-bottom: 32px; }
+        .terms-content h3 { color: var(--primary-color); font-size: 14px; font-weight: 600; margin-top: 28px; margin-bottom: 8px; }
+        
+        .consent-question { font-size: 15px; font-weight: 600; color: var(--primary-color); margin-bottom: 20px; text-align: center; }
+        .consent-section { padding-top: 24px; border-top: 1px solid var(--border-color); }
+        .btn-next-step { max-width: 300px; display: block; margin: 32px auto 0; background-color: #cccccc; }
+
+        @media (max-width: 640px) {
+            body { padding: 0; background-color: var(--surface-color); }
+            .container { padding: 40px 24px; border-radius: 0; box-shadow: none; border: none; }
+            .header { margin-bottom: 40px; }
+            .header h1 { font-size: 24px; }
+            .form-group, .name-phone-grid { margin-bottom: 36px; }
+            .name-phone-grid { grid-template-columns: 1fr; gap: 36px; }
+            .option-item { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="step1_terms">
+        <div class="header" style="border-bottom: none; margin-bottom: 24px; padding-bottom: 0;">
+            <h1 style="text-align: center; font-size: 22px; color: var(--primary-color);">디어메모리 본식스냅 계약 신청서</h1>
+        </div>
+
+        <div class="terms-content">
+            <h2>약관</h2>
+            <p>본 계약 약관은 신랑신부(이하 '이용자'라 합니다)와 디어메모리(이하 '제공자'라 합니다) 간의 서비스 이용과 관련하여 권리와 의무를 명확히 함에 그 목적이 있습니다.</p>
+
+            <h3>제 1조. [계약의 목적]</h3>
+            <p>본 약관은 '이용자'가 '제공자'의 본식 스냅 촬영 서비스를 이용함에 있어 필요한 권리, 의무 및 책임사항 등을 규정함을 목적으로 합니다. 서비스 제공자는 디어메모리가 지정하는 소속 작가로 배정됩니다.</p>
+
+            <h3>제 2조. [서비스 제공 범위]</h3>
+            <p>디어메모리는 서비스를 원활히 제공하기 위해 계약서에 명시된 촬영 및 관련 작업에 대한 내용을 충실히 이행합니다. 이용자는 제공자에게 촬영과 관련된 필요한 정보(식순, 특이사항 등)를 사전에 제공하여야 합니다.</p>
+
+            <h3>제 3조. [계약금]</h3>
+            <p>계약금은 30만원 입금을 원칙으로 하며, 예약금 입금은 계약 신청서 제출 이후 24시간 이내로 합니다. 서비스 이용자는 계약금 입금 후 24시간 이내 환불(계약금 반환)을 요청할 수 있으며, 24시간 이후에는 어떠한 사유로도 환불이 불가합니다.</p>
+
+            <h3>제 4조. [계약의 무효]</h3>
+            <p>계약 신청서가 허위로 작성되었거나 서비스 제공을 위한 필수적 정보가 누락된 경우, 또는 정해진 기한 내에 계약금이 입금되지 않은 경우 계약은 무효 처리됩니다.</p>
+
+            <h3>제 5조. [계약 취소 및 환불]</h3>
+            <p>계약 취소 시 위약금 규정에 따라 처리되며, 예식일까지 남은 기간에 따라 환불 금액이 차등 적용됩니다. 단순 변심으로 인한 취소 시 계약금은 반환되지 않습니다.</p>
+            
+            <h3>제 6조. [계약의 성립]</h3>
+            <p>서비스 계약은 이용자가 본 약관에 동의하고 계약금을 입금한 후, 제공자가 이를 최종 확정 안내함으로써 성립됩니다.</p>
+
+            <h3>제 7조. [잔금 입금]</h3>
+            <p>잔금은 예식일 기준 1주 전까지 결제되어야 하며, 미입금 시 촬영이 취소될 수 있습니다.</p>
+
+            <h3>제 8조. [데이터 보존]</h3>
+            <p>디어메모리는 최종 상품 발송 후 일정 기간(보통 1개월) 동안 데이터를 보관하며, 이후에는 고객 정보 보호를 위해 데이터가 영구 삭제됩니다.</p>
+
+            <h3>제 9조. [수정 작업]</h3>
+            <p>사진의 수정(보정)은 디어메모리의 고유한 스타일과 색감으로 진행되며, 과도한 체형 수정이나 배경 합성 등은 불가할 수 있습니다. 무리한 재수정 요구는 거절될 수 있습니다.</p>
+            
+            <h3>제 10조. [데이터 파손 및 손실]</h3>
+            <p>불의의 사고(카메라 고장, 메모리카드 오류 등)로 인해 데이터가 파손 또는 손실될 경우, 디어메모리는 이용자에게 피해 정도에 따라 계약금 및 잔금을 전액 환불합니다. 이외의 정신적 피해보상 등 추가적인 보상은 하지 않습니다.</p>
+
+            <h3>제 11조. [저작권 및 초상권]</h3>
+            <p>촬영된 결과물의 저작권은 디어메모리에 있으며, 초상권은 이용자에게 있습니다. 이용자는 상업적 목적이 아닌 개인적 용도로 결과물을 사용할 수 있습니다. 포트폴리오 활용에 동의하신 경우, 디어메모리의 홈페이지 및 SNS 등에 사진이 게재될 수 있습니다.</p>
+        </div>
+
+        <div class="consent-section">
+            <p class="consent-question">위와 같이 약관 동의 및 개인정보를 수집 이용하는 것에 동의하십니까?</p>
+            <div class="options-container" style="max-width: 320px; margin: 0 auto;">
+                <label class="option-item">
+                    <input type="radio" name="agree_terms" value="yes">
+                    <span class="option-label">동의합니다</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="agree_terms" value="no">
+                    <span class="option-label">동의하지 않습니다</span>
+                </label>
+            </div>
+            <button type="button" class="submit-btn btn-next-step" id="nextBtn" disabled>계약서 작성하기</button>
+        </div>
+    </div>
+
+    <div id="step2_contract" style="display: none;">
+        <div class="header">
+            <h1>본식스냅 계약서</h1>
+            <p>아래 양식을 작성해 주시면 꼼꼼히 확인 후 연락드리겠습니다.</p>
+        </div>
+
+        <form id="contractForm">
+            <div class="name-phone-grid">
+                <div>
+                    <label class="question-title">신랑 성함<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="groom_name" placeholder="예) 김민수" required>
+                </div>
+                <div>
+                    <label class="question-title">신랑 연락처<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="groom_phone" placeholder="예) 010-0000-0000" required>
+                </div>
+                <div>
+                    <label class="question-title">신부 성함<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="bride_name" placeholder="예) 이혜빈" required>
+                </div>
+                <div>
+                    <label class="question-title">신부 연락처<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="bride_phone" placeholder="예) 010-0000-0000" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">안내받으실 이메일 주소<span class="required">*</span></label>
+                <span class="help-text">예약 확정 및 최종 안내문이 발송되는 주소입니다.</span>
+                <input type="email" class="input-text" id="customer_email" placeholder="예) dearmemory@naver.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">본식 날짜<span class="required">*</span></label>
+                <input type="text" class="input-text" id="wedding_date" placeholder="예) 27년 10월 26일 토요일" required>
+            </div>
+
+            <!-- 웨딩홀 및 예식 장소 분리 입력 (예식장 / 홀이름) -->
+            <div class="name-phone-grid" style="margin-bottom: 0;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="question-title">예식장<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="wedding_venue" placeholder="예) 보타닉파크웨딩" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="question-title">홀 이름<span class="required">*</span></label>
+                    <input type="text" class="input-text" id="wedding_hall" placeholder="예) 카라홀" required>
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 24px;">
+                <label class="question-title">예식 시간<span class="required">*</span></label>
+                <input type="text" class="input-text" id="wedding_time" placeholder="예) 오후 3시 30분" required>
+            </div>
+
+            <!-- 상품구성 -->
+            <div class="form-group">
+                <label class="question-title">본식스냅 상품구성<span class="required">*</span></label>
+                <div class="options-container">
+                    <label class="option-item"><input type="checkbox" name="snap_type" value="실속형 (125만원 / 앨범 1권)"><span class="option-label">실속형 (125만원 / 앨범 1권)</span></label>
+                    <label class="option-item"><input type="checkbox" name="snap_type" value="화보형 (145만원 / 앨범 3권)"><span class="option-label">화보형 (145만원 / 앨범 3권)</span></label>
+                    <label class="option-item"><input type="checkbox" name="snap_type" value="2인 작가 촬영"><span class="option-label">2인 작가 촬영</span></label>
+                    <label class="option-item"><input type="checkbox" name="snap_type" value="폐백 촬영"><span class="option-label">폐백 촬영</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">본식스냅 촬영 시 요청사항 (자세히)<span class="required">*</span> <span style="font-size: 13px; font-weight: normal; color: var(--text-help); margin-left: 4px;">(아직 미정이시면, 추후 톡 채널로 보내주세요)</span></label>
+                <span class="help-text">예시) 신랑신부 위주로 담아주세요. 부모님 사진도 많이 담아주세요.</span>
+                <textarea class="input-textarea" id="shooting_req" placeholder="요청사항을 자유롭게 적어주세요." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">후보정 시 요청사항 (자세히)<span class="required">*</span> <span style="font-size: 13px; font-weight: normal; color: var(--text-help); margin-left: 4px;">(아직 미정이시면, 추후 톡 채널로 보내주세요)</span></label>
+                <textarea class="input-textarea" id="editing_req" placeholder="원하시는 보정 스타일이나 요청사항을 적어주세요." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">기타 요청사항 <span style="font-size: 13px; font-weight: normal; color: var(--text-help); margin-left: 4px;">(아직 미정이시면, 추후 톡 채널로 보내주세요)</span></label>
+                <textarea class="input-textarea" id="other_req" placeholder="기타 궁금하신 점이나 추가 요청사항을 적어주세요."></textarea>
+            </div>
+
+            <!-- 포트폴리오 동의 -->
+            <div class="form-group">
+                <label class="question-title">포트폴리오 동의* (디어메모리에게 큰 힘이 됩니다😊)</label>
+                <div class="options-container">
+                    <label class="option-item"><input type="radio" name="portrait_rights" value="동의 (10만원 할인)" required><span class="option-label">동의 (10만원 할인)</span></label>
+                    <label class="option-item"><input type="radio" name="portrait_rights" value="비동의"><span class="option-label">비동의</span></label>
+                </div>
+            </div>
+
+            <!-- 짝꿍 할인 -->
+            <div class="form-group">
+                <label class="question-title">짝꿍 할인 <span style="font-size: 13px; font-weight: normal; color: var(--text-help); margin-left: 4px;">(선택 사항)</span></label>
+                <span class="help-text">짝꿍 이벤트로 오신 경우, 추천인 성함을 적어주세요.</span>
+                <input type="text" class="input-text" id="buddy_name" placeholder="예) 이혜림">
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">알게 되신 경로<span class="required">*</span></label>
+                <div class="options-container" style="margin-bottom: 12px;">
+                    <label class="option-item"><input type="radio" name="route" value="인스타그램" required><span class="option-label">인스타그램</span></label>
+                    <label class="option-item"><input type="radio" name="route" value="블로그"><span class="option-label">블로그 검색</span></label>
+                    <label class="option-item"><input type="radio" name="route" value="지인소개"><span class="option-label">지인 소개</span></label>
+                    <label class="option-item"><input type="radio" name="route" value="기타"><span class="option-label">기타</span></label>
+                </div>
+                <input type="text" class="input-text" id="route_other" placeholder="기타 경로를 입력해 주세요 (선택)">
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">인스타그램 아이디 / 블로그 주소</label>
+                <span class="help-text">후기 확인 시 필요합니다 :)</span>
+                <input type="text" class="input-text" id="sns_id" placeholder="ID 또는 주소를 입력해 주세요">
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">계약서 제출하기</button>
+        </form>
+
+        <div class="footer">
+            © Dear Memory. All rights reserved.
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const appId = 'default-app-id';
+    
+    const firebaseConfig = {
+        apiKey: "AIzaSyBfgL7gC-uQeeH2bBB4q2JRTnk2ooRTZF8",
+        authDomain: "mkstroy-3dc7e.firebaseapp.com",
+        projectId: "mkstroy-3dc7e",
+        storageBucket: "mkstroy-3dc7e.firebasestorage.app",
+        messagingSenderId: "1041941827601",
+        appId: "1:1041941827601:web:4004c163fdd00586afa1b0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    signInAnonymously(auth).catch(e => console.warn("익명 로그인 주의:", e));
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const termsRadios = document.querySelectorAll('input[name="agree_terms"]');
+        const nextBtn = document.getElementById('nextBtn');
+        const step1 = document.getElementById('step1_terms');
+        const step2 = document.getElementById('step2_contract');
+
+        termsRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'yes') {
+                    nextBtn.disabled = false; nextBtn.style.backgroundColor = 'var(--primary-color)';
+                } else {
+                    nextBtn.disabled = true; nextBtn.style.backgroundColor = '#cccccc';
+                }
+            });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        const allInputs = document.querySelectorAll('.option-item input');
+        allInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                const target = e.target;
+                if (target.type === 'radio') {
+                    document.querySelectorAll(`input[name="${target.name}"]`).forEach(radio => {
+                        const parent = radio.closest('.option-item');
+                        if (parent) radio.checked ? parent.classList.add('active') : parent.classList.remove('active');
+                    });
+                } else if (target.type === 'checkbox') {
+                    const parent = target.closest('.option-item');
+                    if (parent) target.checked ? parent.classList.add('active') : parent.classList.remove('active');
+                }
+            });
+        });
+
+        const contractForm = document.getElementById('contractForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (contractForm) {
+            contractForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); 
+
+                const snapTypes = Array.from(document.querySelectorAll('input[name="snap_type"]:checked')).map(cb => cb.value);
+                const groomName = document.getElementById('groom_name')?.value || '';
+                const groomPhone = document.getElementById('groom_phone')?.value || '';
+                const brideName = document.getElementById('bride_name')?.value || '';
+                const bridePhone = document.getElementById('bride_phone')?.value || '';
+
+                const venue = document.getElementById('wedding_venue')?.value || '';
+                const hall = document.getElementById('wedding_hall')?.value || '';
+                const time = document.getElementById('wedding_time')?.value || '';
+                const combinedLocationTime = `${venue} / ${hall} / ${time}`;
+
+                const formData = {
+                    groomName: groomName,
+                    groomPhone: groomPhone,
+                    brideName: brideName,
+                    bridePhone: bridePhone,
+                    customerEmail: document.getElementById('customer_email')?.value || '',
+                    weddingDate: document.getElementById('wedding_date')?.value || '',
+                    weddingVenue: venue,
+                    weddingHall: hall,
+                    weddingTime: time,
+                    weddingLocationTime: combinedLocationTime,
+                    snapPackage: snapTypes.join(', '), 
+                    shootingRequests: document.getElementById('shooting_req')?.value || '',
+                    editingRequests: document.getElementById('editing_req')?.value || '',
+                    otherRequests: document.getElementById('other_req')?.value || '',
+                    portraitRights: document.querySelector('input[name="portrait_rights"]:checked')?.value || '',
+                    buddyName: document.getElementById('buddy_name')?.value || '',
+                    discoveryRoute: document.querySelector('input[name="route"]:checked')?.value || '',
+                    discoveryRouteOther: document.getElementById('route_other')?.value || '',
+                    snsId: document.getElementById('sns_id')?.value || '',
+                    submittedAt: new Date().toISOString(),
+                    status: 'pending' 
+                };
+
+                submitBtn.disabled = true; 
+                submitBtn.textContent = '제출 및 저장 중...';
+
+                try {
+                    // 1. Firebase 데이터베이스에 확실히 먼저 저장 (await 사용)
+                    const reservationsRef = collection(db, 'artifacts', appId, 'public', 'data', 'reservations');
+                    await addDoc(reservationsRef, formData);
+
+                    // 2. EmailJS 관리자 알림 메일 발송
+                    const adminDashboardLink = window.location.origin + "/admin_dashboard.html";
+                    const templateParams = {
+                        to_email: "dearmemory@kakao.com",
+                        admin_email: "dearmemory@kakao.com",
+                        customer_name: `${brideName} 신부님, ${groomName} 신랑님`,
+                        bride_name: brideName,
+                        bride_phone: bridePhone,
+                        groom_name: groomName,
+                        groom_phone: groomPhone,
+                        customer_email: formData.customerEmail,
+                        wedding_date: formData.weddingDate,
+                        wedding_location: formData.weddingLocationTime,
+                        snap_package: formData.snapPackage,
+                        buddy_name: formData.buddyName || '없음',
+                        shooting_req: formData.shootingRequests || '없음',
+                        editing_req: formData.editingRequests || '없음',
+                        other_req: formData.otherRequests || '없음',
+                        portrait_rights: formData.portraitRights,
+                        dashboard_link: adminDashboardLink,
+                        message: `
+[디어메모리 신규 예약 신청 내역]
+• 신부: ${brideName} (${bridePhone})
+• 신랑: ${groomName} (${groomPhone})
+• 이메일: ${formData.customerEmail}
+• 예식일: ${formData.weddingDate}
+• 장소/시간: ${formData.weddingLocationTime}
+• 상품: ${formData.snapPackage}
+• 포트폴리오 동의: ${formData.portraitRights}
+• 짝꿍 할인: ${formData.buddyName || '없음'}
+• 촬영 요청사항: ${formData.shootingRequests || '없음'}
+• 보정 요청사항: ${formData.editingRequests || '없음'}
+
+👉 관리자 대시보드에서 확인하기:
+${adminDashboardLink}
+                        `.trim()
+                    };
+
+                    emailjs.send("service_vdp4qnl", "template_mr76o7g", templateParams).catch(err => console.error("메일 발송 에러:", err));
+
+                    // 3. 완료 안내 팝업 및 창 닫기 시도
+                    alert("예약 신청이 완료되었습니다! 🎉\n확인 후 안내 메일 드리겠습니다.");
+                    
+                    // 브라우저 창 닫기 시도 (보안상 막히는 브라우저의 경우 폼 리셋)
+                    window.close();
+                    
+                    // 만약 창이 안 닫히면 초기 화면으로 리셋
+                    contractForm.reset();
+                    document.querySelectorAll('.option-item').forEach(item => item.classList.remove('active'));
+                    document.querySelectorAll('input[name="agree_terms"]').forEach(r => r.checked = false);
+                    nextBtn.disabled = true; nextBtn.style.backgroundColor = '#cccccc';
+                    step2.style.display = 'none'; step1.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                } catch (error) {
+                    console.error("제출 처리 오류:", error);
+                    alert("제출 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+                } finally {
+                    submitBtn.disabled = false; 
+                    submitBtn.textContent = '계약서 제출하기';
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
