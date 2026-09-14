@@ -83,26 +83,38 @@
 </head>
 <body>
 
-  <div class="control-panel">
-    <div id="clientSelectWrapper">
-      <span style="font-weight:600; margin-right:10px;">📋 접수된 예약 고객:</span>
-      <select id="clientSelect" class="client-select">
-        <option value="">고객을 선택하세요</option>
-      </select>
-    </div>
-    <div style="display:flex; gap:10px;">
-      <button class="btn btn-pdf" id="downloadPdfBtn">📥 현재 계약서 PDF 저장</button>
-      <button class="btn btn-approve" id="sendEmailBtn">💌 이 내용으로 확정 메일 보내기</button>
-    </div>
+  <div id="loginArea" style="max-width: 360px; margin: 100px auto; background: #fff; padding: 40px 32px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <h2 style="margin: 0 0 24px; font-size: 18px; text-align: center;">🔒 관리자 로그인</h2>
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="관리자 이메일" required style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; font-size:14px;">
+      <input type="password" id="loginPassword" placeholder="비밀번호" required style="width:100%; padding:12px; margin-bottom:16px; border:1px solid #ccc; border-radius:6px; font-size:14px;">
+      <button type="submit" class="btn btn-approve" style="width:100%;">로그인</button>
+      <p id="loginError" style="color:#d32f2f; font-size:13px; margin-top:12px; text-align:center;"></p>
+    </form>
   </div>
 
-  <div id="contractViewArea">
-    <div class="no-data">접수된 예약 내역을 불러오는 중이거나 선택된 고객이 없습니다.</div>
+  <div id="adminArea" style="display:none;">
+    <div class="control-panel">
+      <div id="clientSelectWrapper">
+        <span style="font-weight:600; margin-right:10px;">📋 접수된 예약 고객:</span>
+        <select id="clientSelect" class="client-select">
+          <option value="">고객을 선택하세요</option>
+        </select>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-pdf" id="downloadPdfBtn">📥 현재 계약서 PDF 저장</button>
+        <button class="btn btn-approve" id="sendEmailBtn">💌 이 내용으로 확정 메일 보내기</button>
+      </div>
+    </div>
+
+    <div id="contractViewArea">
+      <div class="no-data">접수된 예약 내역을 불러오는 중이거나 선택된 고객이 없습니다.</div>
+    </div>
   </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+  import { getAuth, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
   import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
   const appId = 'default-app-id';
@@ -482,18 +494,45 @@ ${viewLink}
 
   const viewOnlyDocId = new URLSearchParams(window.location.search).get('doc');
 
-  onAuthStateChanged(auth, (user) => {
-      if (!user) return;
-      if (viewOnlyDocId) {
-          initCustomerView(viewOnlyDocId);
-      } else {
-          initDashboard();
-      }
-  });
-  signInAnonymously(auth).catch(e => {
-      console.error("관리자 로그인 오류:", e);
-      document.getElementById('contractViewArea').innerHTML = '<div class="no-data" style="color:red;">로그인에 실패하여 데이터를 불러올 수 없습니다.</div>';
-  });
+  if (viewOnlyDocId) {
+      // 고객이 메일 속 링크로 들어온 경우: 로그인 없이 본인 계약서만 익명으로 조회
+      document.getElementById('loginArea').style.display = 'none';
+      document.getElementById('adminArea').style.display = 'block';
+
+      onAuthStateChanged(auth, (user) => {
+          if (user) initCustomerView(viewOnlyDocId);
+      });
+      signInAnonymously(auth).catch(e => {
+          console.error("고객 조회용 로그인 오류:", e);
+          document.getElementById('contractViewArea').innerHTML = '<div class="no-data" style="color:red;">계약서를 불러오는 중 오류가 발생했습니다.</div>';
+      });
+  } else {
+      // 관리자 화면: 이메일/비밀번호 로그인 필요
+      onAuthStateChanged(auth, (user) => {
+          if (user && !user.isAnonymous) {
+              document.getElementById('loginArea').style.display = 'none';
+              document.getElementById('adminArea').style.display = 'block';
+              initDashboard();
+          } else {
+              document.getElementById('loginArea').style.display = 'block';
+              document.getElementById('adminArea').style.display = 'none';
+          }
+      });
+
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('loginEmail').value;
+          const password = document.getElementById('loginPassword').value;
+          const errorEl = document.getElementById('loginError');
+          errorEl.textContent = '';
+          try {
+              await signInWithEmailAndPassword(auth, email, password);
+          } catch (error) {
+              console.error("관리자 로그인 실패:", error);
+              errorEl.textContent = '이메일 또는 비밀번호가 올바르지 않습니다.';
+          }
+      });
+  }
 </script>
 </body>
 </html>
