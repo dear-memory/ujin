@@ -114,7 +114,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-  import { getAuth, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+  import { getAuth, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
   import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
   const appId = 'default-app-id';
@@ -131,6 +131,8 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
+  // 로그인 상태를 브라우저에 유지 (매번 다시 로그인하지 않도록)
+  setPersistence(auth, browserLocalPersistence).catch(e => console.warn("로그인 유지 설정 실패:", e));
   emailjs.init("Y6IahGiPQUmtzX7SX");
 
   // "27년 10월 26일" 같은 문자열에서 연/월/일을 뽑아 실제 요일이 일요일인지 계산
