@@ -20,7 +20,7 @@ Google Fonts (verified): one `<link>` with only the weights used, plus `display=
 Pretendard is not on Google Fonts; load it from jsDelivr:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard-dynamic-subset.css">
 ```
 
 Always end the stack with system Korean fallbacks:

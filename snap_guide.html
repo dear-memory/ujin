@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>본식스냅 진행 안내 | Dear Memory</title>
+<meta name="description" content="디어메모리 본식스냅 후보정부터 앨범 수령까지의 진행 과정 안내">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard-dynamic-subset.css">
+<style>
+  :root {
+    --paper: #f5f4f1;
+    --surface: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #55534e;
+    --ink-faint: #8a877f;
+    --line: #e2dfd8;
+    --linen: #e8e3d8;
+    --moss: #4a5d52;
+    --moss-soft: #e4ebe6;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Header */
+  .masthead {
+    padding: 56px 0 40px;
+  }
+
+  .wordmark {
+    margin: 0 0 40px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(34px, 9vw, 52px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+  }
+
+  .lede {
+    margin: 12px 0 0;
+    font-size: 18px;
+    color: var(--ink-soft);
+  }
+
+  /* Overview timeline */
+  .overview {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 28px 22px 26px;
+  }
+
+  .overview h2 {
+    margin: 0 0 4px;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .overview .total {
+    margin: 0 0 24px;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+  }
+
+  .overview .total strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .track {
+    display: grid;
+    grid-template-columns: 14fr 9fr 67fr 10fr;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .track li {
+    min-width: 0;
+  }
+
+  .bar {
+    height: 12px;
+    border-radius: 6px;
+    background: var(--ink);
+  }
+
+  .track .you .bar {
+    background: var(--moss-soft);
+    box-shadow: inset 0 0 0 1.5px var(--moss);
+  }
+
+  .track .when {
+    display: block;
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .track .what {
+    display: block;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    line-height: 1.4;
+  }
+
+  .track .narrow .when,
+  .track .narrow .what {
+    visibility: hidden;
+  }
+
+  .track-notes {
+    display: none;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 22px 0 0;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--line);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .legend i {
+    width: 22px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--ink);
+  }
+
+  .legend .you i {
+    background: var(--moss-soft);
+    box-shadow: inset 0 0 0 1.5px var(--moss);
+  }
+
+  /* Steps */
+  .steps {
+    margin: 56px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    column-gap: 16px;
+    position: relative;
+    padding-bottom: 36px;
+  }
+
+  .step:last-child { padding-bottom: 0; }
+
+  .step::before {
+    content: "";
+    position: absolute;
+    left: 21px;
+    top: 48px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--line);
+  }
+
+  .step:last-child::before { display: none; }
+
+  .num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--ink);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .step.you .num {
+    background: var(--moss-soft);
+    color: var(--moss);
+    box-shadow: inset 0 0 0 1.5px var(--moss);
+  }
+
+  .step-body { padding-top: 7px; }
+
+  .who {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-faint);
+  }
+
+  .step.you .who { color: var(--moss); }
+
+  .step h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.025em;
+  }
+
+  .step p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  .step p + p { margin-top: 6px; }
+
+  .point {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--surface);
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  .point strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .point ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .point li + li { margin-top: 4px; }
+
+  .filename {
+    margin-top: 14px;
+    border-radius: 12px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .filename .rule {
+    padding: 14px 16px 12px;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  .filename .rule strong {
+    color: var(--ink);
+  }
+
+  .filename .example {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--moss-soft);
+    color: var(--moss);
+    font-size: 14px;
+  }
+
+  .filename .example b {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Notes */
+  .notes {
+    display: grid;
+    gap: 14px;
+    margin: 64px 0 0;
+  }
+
+  .note {
+    padding: 24px 22px;
+    border-radius: 20px;
+    background: var(--linen);
+  }
+
+  .note h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .note p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  .note p + p { margin-top: 8px; }
+
+  .note strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 72px;
+    padding: 48px 0 64px;
+    border-top: 1px solid var(--line);
+  }
+
+  footer .wordmark {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  footer p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  @media (min-width: 640px) {
+    .wrap { padding: 0 32px; }
+    .masthead { padding: 88px 0 56px; }
+    .overview { padding: 36px 36px 30px; }
+    .track .narrow .when,
+    .track .narrow .what { visibility: visible; }
+    .notes { grid-template-columns: 1fr 1fr; }
+    .step { grid-template-columns: 52px 1fr; column-gap: 22px; }
+    .step::before { left: 25px; top: 56px; }
+    .num { width: 52px; height: 52px; font-size: 16px; }
+    .step-body { padding-top: 11px; }
+  }
+
+  @media (max-width: 639px) {
+    .track-notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .track-notes li {
+      font-size: 12.5px;
+      color: var(--ink-faint);
+      line-height: 1.4;
+    }
+    .track-notes b {
+      display: block;
+      font-size: 13px;
+      color: var(--ink);
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <p class="wordmark">Dear Memory</p>
+      <h1>본식스냅<br>진행 안내</h1>
+      <p class="lede">후보정부터 앨범 수령까지</p>
+    </header>
+
+    <main>
+      <section class="overview" aria-labelledby="overview-title">
+        <h2 id="overview-title">한눈에 보는 전체 과정</h2>
+        <p class="total">본식 후 앨범을 받기까지 <strong>약 5~6개월</strong> 걸려요.</p>
+
+        <ol class="track" aria-label="진행 기간">
+          <li>
+            <div class="bar"></div>
+            <span class="when">2~3주</span>
+            <span class="what">원본 전송</span>
+          </li>
+          <li class="you narrow">
+            <div class="bar"></div>
+            <span class="when">셀렉</span>
+            <span class="what">업로드</span>
+          </li>
+          <li>
+            <div class="bar"></div>
+            <span class="when">4~5개월</span>
+            <span class="what">순차 보정 후 보정본 전송</span>
+          </li>
+          <li class="narrow">
+            <div class="bar"></div>
+            <span class="when">약 1주</span>
+            <span class="what">인쇄·배송</span>
+          </li>
+        </ol>
+
+        <ul class="track-notes" aria-hidden="true">
+          <li><b>셀렉·업로드</b>원본을 받은 뒤 신랑신부님이 진행</li>
+          <li><b>약 1주</b>인쇄 요청 후 앨범 배송</li>
+        </ul>
+
+        <div class="legend">
+          <span><i></i>디어메모리가 진행</span>
+          <span class="you"><i></i>신랑신부님이 해주실 일</span>
+        </div>
+      </section>
+
+      <ol class="steps">
+        <li class="step">
+          <div class="num">01</div>
+          <div class="step-body">
+            <span class="who">디어메모리</span>
+            <h3>스냅 원본과 안내 메일 받기</h3>
+            <p>촬영 원본과 안내사항을 메일로 보내드려요.</p>
+            <div class="point">
+              <ul>
+                <li>원본 메일은 <strong>본식 후 2~3주 안에</strong> 보내드려요.</li>
+                <li>메일을 보낸 뒤 채널톡으로도 안내 메시지를 드려요.</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="step you">
+          <div class="num">02</div>
+          <div class="step-body">
+            <span class="who">신랑신부님</span>
+            <h3>사진 셀렉 후 클라우드 업로드</h3>
+            <p>마음에 드는 사진을 고르신 뒤, 메일에 안내된 클라우드 링크로 업로드해 주세요.</p>
+            <div class="filename">
+              <div class="rule">파일명은 <strong>본식날짜_신부님 성함</strong>으로 적어주세요.</div>
+              <div class="example"><span>예시</span><b>20260504_김세리</b></div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step you">
+          <div class="num">03</div>
+          <div class="step-body">
+            <span class="who">신랑신부님</span>
+            <h3>채널톡으로 업로드 완료 알림</h3>
+            <p>디어메모리 채널톡으로 업로드가 끝났다고 메시지를 보내주시면 접수가 확인돼요.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="num">04</div>
+          <div class="step-body">
+            <span class="who">디어메모리</span>
+            <h3>4~5개월 후 보정본 메일 받기</h3>
+            <p>순서대로 보정 작업을 진행하고, 완료되면 보정본을 메일로 보내드려요.</p>
+          </div>
+        </li>
+
+        <li class="step you">
+          <div class="num">05</div>
+          <div class="step-body">
+            <span class="who">신랑신부님</span>
+            <h3>이상 없으면 인쇄 요청 회신</h3>
+            <p>보정본을 확인하시고 문제가 없으면, 인쇄를 요청하는 답메일을 보내주세요.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="num">06</div>
+          <div class="step-body">
+            <span class="who">디어메모리</span>
+            <h3>집에서 앨범 택배 받기</h3>
+            <p>인쇄 요청 후 약 일주일 뒤, 자택으로 앨범을 보내드려요.</p>
+            <div class="point">
+              <ul>
+                <li>택배는 <strong>주소 1곳</strong>으로 보내드려요.</li>
+                <li>보내기 전에 주소를 한 번 더 확인해 드려요.</li>
+                <li>여러 주소로 받고 싶으시면 따로 문의해 주세요.</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="notes">
+        <section class="note">
+          <h2>보정 소요 기간</h2>
+          <p>고르신 사진의 보정은 <strong>3~5개월</strong> 정도 걸리며, 순서대로 진행돼요.</p>
+          <p>가끔 순서에서 빠지는 경우가 있어요. 이 기간이 지나도 연락이 없다면 확인차 메시지 한 번 보내주세요.</p>
+        </section>
+
+        <section class="note">
+          <h2>재수정 요청</h2>
+          <p>보정본을 받아보신 뒤 다시 수정하고 싶은 부분이 있다면 답메일에 남겨주세요. 최대한 빠르게 재보정해 드려요. 상황에 따라 늦어질 수 있는 점 양해 부탁드려요.</p>
+          <p>보정 가능한 범위가 정해져 있으니, <strong>메일 안내사항</strong>을 꼭 확인해 주세요.</p>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <p class="wordmark">Dear Memory</p>
+      <p>문의사항은 언제든 채널톡으로 편하게 연락 주세요.</p>
+    </footer>
+  </div>
+</body>
+</html>
