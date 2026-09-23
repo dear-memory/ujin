@@ -8,15 +8,14 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard-dynamic-subset.css">
 <style>
   :root {
-    --paper: #f5f4f1;
-    --surface: #ffffff;
-    --ink: #1a1a1a;
-    --ink-soft: #55534e;
-    --ink-faint: #8a877f;
-    --line: #e2dfd8;
-    --linen: #e8e3d8;
-    --moss: #4a5d52;
-    --moss-soft: #e4ebe6;
+    --bg: #fbfaf8;
+    --tint: #f2f0eb;
+    --ink: #1d1d1b;
+    --ink-2: #5a5853;
+    --ink-3: #9a968e;
+    --line: #e6e3dd;
+    --sage: #5b6b55;
+    --sage-bg: #e9ede5;
     color-scheme: light;
   }
 
@@ -26,11 +25,11 @@
 
   body {
     margin: 0;
-    background: var(--paper);
+    background: var(--bg);
     color: var(--ink);
     font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
     font-size: 16px;
-    line-height: 1.7;
+    line-height: 1.75;
     letter-spacing: -0.01em;
     word-break: keep-all;
     overflow-wrap: anywhere;
@@ -38,476 +37,551 @@
   }
 
   .wrap {
-    max-width: 720px;
+    max-width: 1040px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 22px;
   }
 
-  /* Header */
-  .masthead {
-    padding: 56px 0 40px;
+  /* Top bar */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+    font-size: 14px;
   }
 
-  .wordmark {
-    margin: 0 0 40px;
-    font-size: 15px;
+  .topbar .brand {
     font-weight: 700;
     letter-spacing: -0.02em;
+  }
+
+  .topbar .doc {
+    color: var(--ink-3);
+  }
+
+  /* Hero */
+  .hero {
+    padding: 72px 0 64px;
   }
 
   h1 {
     margin: 0;
-    font-size: clamp(34px, 9vw, 52px);
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.035em;
+    font-size: clamp(40px, 11vw, 88px);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.045em;
   }
 
-  .lede {
-    margin: 12px 0 0;
-    font-size: 18px;
-    color: var(--ink-soft);
+  h1 .soft {
+    color: var(--ink-3);
+    font-weight: 300;
   }
 
-  /* Overview timeline */
-  .overview {
-    background: var(--surface);
-    border-radius: 20px;
-    padding: 28px 22px 26px;
+  .hero p {
+    max-width: 30em;
+    margin: 28px 0 0;
+    font-size: 17px;
+    color: var(--ink-2);
   }
 
-  .overview h2 {
-    margin: 0 0 4px;
-    font-size: 19px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+  /* Timeline */
+  .timeline {
+    padding: 40px 0 8px;
+    border-top: 1px solid var(--ink);
   }
 
-  .overview .total {
-    margin: 0 0 24px;
-    font-size: 14.5px;
-    color: var(--ink-soft);
+  .timeline-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px 24px;
+    margin-bottom: 44px;
   }
 
-  .overview .total strong {
+  .timeline-head h2 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .timeline-head p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ink-2);
+  }
+
+  .timeline-head strong {
     color: var(--ink);
-    font-weight: 700;
+    font-weight: 600;
   }
 
-  .track {
+  .rail {
+    position: relative;
     display: grid;
     grid-template-columns: 14fr 9fr 67fr 10fr;
-    gap: 4px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .track li {
+  .rail li {
+    position: relative;
     min-width: 0;
-  }
-
-  .bar {
-    height: 12px;
-    border-radius: 6px;
-    background: var(--ink);
-  }
-
-  .track .you .bar {
-    background: var(--moss-soft);
-    box-shadow: inset 0 0 0 1.5px var(--moss);
-  }
-
-  .track .when {
-    display: block;
-    margin-top: 10px;
+    padding-bottom: 18px;
+    text-align: center;
     font-size: 13px;
-    font-weight: 700;
-    line-height: 1.35;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
   }
 
-  .track .what {
-    display: block;
-    font-size: 12.5px;
-    color: var(--ink-faint);
-    line-height: 1.4;
+  .rail li::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--ink);
+    transform-origin: left;
   }
 
-  .track .narrow .when,
-  .track .narrow .what {
-    visibility: hidden;
+  .rail li.you {
+    color: var(--sage);
   }
 
-  .track-notes {
-    display: none;
+  .rail li.you::after {
+    background: repeating-linear-gradient(90deg, var(--sage) 0 4px, transparent 4px 7px);
   }
 
-  .legend {
+  .rail li::before {
+    content: "";
+    position: absolute;
+    left: -4px;
+    bottom: -3px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: inset 0 0 0 2px var(--ink);
+    z-index: 1;
+  }
+
+  .rail li:last-child .end {
+    position: absolute;
+    right: -4px;
+    bottom: -3px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink);
+    z-index: 1;
+  }
+
+  .rail-ends {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+
+  .rail-key {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 18px;
-    margin: 22px 0 0;
-    padding: 16px 0 0;
-    border-top: 1px solid var(--line);
-    font-size: 13.5px;
-    color: var(--ink-soft);
+    gap: 6px 20px;
+    margin: 28px 0 0;
+    font-size: 13px;
+    color: var(--ink-2);
   }
 
-  .legend span {
+  .rail-key span {
     display: inline-flex;
     align-items: center;
     gap: 8px;
   }
 
-  .legend i {
-    width: 22px;
-    height: 8px;
-    border-radius: 4px;
+  .rail-key i {
+    width: 20px;
+    height: 2px;
     background: var(--ink);
   }
 
-  .legend .you i {
-    background: var(--moss-soft);
-    box-shadow: inset 0 0 0 1.5px var(--moss);
+  .rail-key .you i {
+    background: repeating-linear-gradient(90deg, var(--sage) 0 4px, transparent 4px 7px);
   }
 
-  /* Steps */
+  @media (prefers-reduced-motion: no-preference) {
+    .rail li::after {
+      animation: draw 0.5s cubic-bezier(.4, 0, .2, 1) both;
+    }
+    .rail li:nth-child(2)::after { animation-delay: 0.35s; }
+    .rail li:nth-child(3)::after { animation-delay: 0.6s; animation-duration: 1s; }
+    .rail li:nth-child(4)::after { animation-delay: 1.45s; }
+    @keyframes draw {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+  }
+
+  /* Process */
+  .process {
+    margin-top: 96px;
+    border-top: 1px solid var(--ink);
+    padding-top: 40px;
+  }
+
+  .process-head h2 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .process-head p {
+    margin: 4px 0 0;
+    font-size: 15px;
+    color: var(--ink-2);
+  }
+
   .steps {
-    margin: 56px 0 0;
+    margin: 32px 0 0;
     padding: 0;
     list-style: none;
   }
 
   .step {
     display: grid;
-    grid-template-columns: 44px 1fr;
-    column-gap: 16px;
-    position: relative;
-    padding-bottom: 36px;
+    grid-template-columns: 56px 1fr;
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
   }
 
-  .step:last-child { padding-bottom: 0; }
-
-  .step::before {
-    content: "";
-    position: absolute;
-    left: 21px;
-    top: 48px;
-    bottom: 8px;
-    width: 2px;
-    background: var(--line);
-  }
-
-  .step:last-child::before { display: none; }
+  .step:first-child { border-top: 0; padding-top: 0; }
 
   .num {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: var(--ink);
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--ink-3);
     font-variant-numeric: tabular-nums;
   }
 
-  .step.you .num {
-    background: var(--moss-soft);
-    color: var(--moss);
-    box-shadow: inset 0 0 0 1.5px var(--moss);
-  }
-
-  .step-body { padding-top: 7px; }
-
   .who {
     display: inline-block;
-    margin-bottom: 4px;
-    font-size: 13px;
+    margin-bottom: 10px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--tint);
+    color: var(--ink-2);
+    font-size: 12.5px;
     font-weight: 600;
-    color: var(--ink-faint);
+    line-height: 1.5;
   }
 
-  .step.you .who { color: var(--moss); }
+  .step.you .who {
+    background: var(--sage-bg);
+    color: var(--sage);
+  }
 
   .step h3 {
-    margin: 0 0 8px;
-    font-size: 20px;
-    font-weight: 700;
+    margin: 0 0 6px;
+    font-size: 21px;
+    font-weight: 600;
     line-height: 1.4;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
   }
 
   .step p {
     margin: 0;
-    color: var(--ink-soft);
+    color: var(--ink-2);
   }
 
-  .step p + p { margin-top: 6px; }
-
-  .point {
-    margin-top: 14px;
-    padding: 14px 16px;
-    border-radius: 12px;
-    background: var(--surface);
+  .details {
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
     font-size: 15px;
-    color: var(--ink-soft);
+    color: var(--ink-2);
   }
 
-  .point strong {
+  .details li {
+    position: relative;
+    padding-left: 16px;
+  }
+
+  .details li + li { margin-top: 4px; }
+
+  .details li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 0.8em;
+    width: 5px;
+    height: 1px;
+    background: var(--ink-3);
+  }
+
+  .details strong {
     color: var(--ink);
-    font-weight: 700;
+    font-weight: 600;
   }
 
-  .point ul {
-    margin: 0;
-    padding-left: 18px;
-  }
-
-  .point li + li { margin-top: 4px; }
-
-  .filename {
-    margin-top: 14px;
-    border-radius: 12px;
-    background: var(--surface);
-    overflow: hidden;
-  }
-
-  .filename .rule {
-    padding: 14px 16px 12px;
-    font-size: 15px;
-    color: var(--ink-soft);
-  }
-
-  .filename .rule strong {
-    color: var(--ink);
-  }
-
-  .filename .example {
+  .file {
     display: flex;
-    align-items: baseline;
-    gap: 12px;
-    padding: 14px 16px;
-    background: var(--moss-soft);
-    color: var(--moss);
-    font-size: 14px;
+    align-items: center;
+    gap: 14px;
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--line);
   }
 
-  .filename .example b {
-    font-size: 19px;
-    font-weight: 700;
-    color: var(--ink);
+  .file svg {
+    flex-shrink: 0;
+    width: 28px;
+    height: 34px;
+  }
+
+  .file .label {
+    display: block;
+    font-size: 13px;
+    color: var(--ink-3);
+    line-height: 1.4;
+  }
+
+  .file .name {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
     letter-spacing: 0;
+    line-height: 1.4;
     font-variant-numeric: tabular-nums;
+  }
+
+  .file .name span {
+    color: var(--sage);
   }
 
   /* Notes */
   .notes {
     display: grid;
-    gap: 14px;
-    margin: 64px 0 0;
+    gap: 40px;
+    margin-top: 96px;
   }
 
   .note {
-    padding: 24px 22px;
-    border-radius: 20px;
-    background: var(--linen);
+    padding-top: 24px;
+    border-top: 1px solid var(--ink);
   }
 
   .note h2 {
-    margin: 0 0 10px;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+    font-size: 17px;
+    font-weight: 600;
   }
 
   .note p {
     margin: 0;
-    font-size: 15px;
-    color: var(--ink-soft);
+    font-size: 15.5px;
+    color: var(--ink-2);
   }
 
-  .note p + p { margin-top: 8px; }
+  .note p + p { margin-top: 10px; }
 
   .note strong {
     color: var(--ink);
-    font-weight: 700;
+    font-weight: 600;
   }
 
   /* Footer */
   footer {
-    margin-top: 72px;
-    padding: 48px 0 64px;
-    border-top: 1px solid var(--line);
+    margin-top: 120px;
+    background: var(--ink);
+    color: #f3f1ec;
   }
 
-  footer .wordmark {
-    margin: 0 0 8px;
-    font-size: 22px;
-    font-weight: 800;
+  footer .wrap {
+    padding-top: 72px;
+    padding-bottom: 56px;
   }
 
-  footer p {
+  footer .brand {
     margin: 0;
-    font-size: 15px;
-    color: var(--ink-soft);
+    font-size: clamp(40px, 12vw, 96px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.05em;
   }
 
-  @media (min-width: 640px) {
-    .wrap { padding: 0 32px; }
-    .masthead { padding: 88px 0 56px; }
-    .overview { padding: 36px 36px 30px; }
-    .track .narrow .when,
-    .track .narrow .what { visibility: visible; }
-    .notes { grid-template-columns: 1fr 1fr; }
-    .step { grid-template-columns: 52px 1fr; column-gap: 22px; }
-    .step::before { left: 25px; top: 56px; }
-    .num { width: 52px; height: 52px; font-size: 16px; }
-    .step-body { padding-top: 11px; }
+  footer .contact {
+    margin: 28px 0 0;
+    font-size: 17px;
+    color: #c9c6be;
   }
 
-  @media (max-width: 639px) {
-    .track-notes {
+  footer .contact strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  footer .copy {
+    margin: 64px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid #3a3a37;
+    font-size: 13px;
+    color: #8c8982;
+  }
+
+  @media (min-width: 760px) {
+    .wrap { padding: 0 40px; }
+    .topbar { height: 80px; }
+    .hero { padding: 120px 0 104px; }
+    .hero p { font-size: 18px; }
+    .rail li { font-size: 14px; }
+
+    .process {
       display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+    }
+    .process-head {
+      position: sticky;
+      top: 40px;
+      align-self: start;
+    }
+    .steps { margin-top: 0; }
+    .step { grid-template-columns: 88px 1fr; padding: 40px 0; }
+    .num { font-size: 40px; }
+    .step h3 { font-size: 23px; }
+
+    .notes {
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin: 16px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-    .track-notes li {
-      font-size: 12.5px;
-      color: var(--ink-faint);
-      line-height: 1.4;
-    }
-    .track-notes b {
-      display: block;
-      font-size: 13px;
-      color: var(--ink);
+      gap: 40px;
     }
   }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <header class="masthead">
-      <p class="wordmark">Dear Memory</p>
-      <h1>본식스냅<br>진행 안내</h1>
-      <p class="lede">후보정부터 앨범 수령까지</p>
+    <div class="topbar">
+      <span class="brand">Dear Memory</span>
+      <span class="doc">본식스냅 안내</span>
+    </div>
+
+    <header class="hero">
+      <h1>본식스냅<br><span class="soft">진행 안내</span></h1>
+      <p>원본을 받으신 날부터 앨범이 집에 도착하는 날까지, 어떤 순서로 진행되는지 정리했어요.</p>
     </header>
 
     <main>
-      <section class="overview" aria-labelledby="overview-title">
-        <h2 id="overview-title">한눈에 보는 전체 과정</h2>
-        <p class="total">본식 후 앨범을 받기까지 <strong>약 5~6개월</strong> 걸려요.</p>
+      <section class="timeline" aria-labelledby="timeline-title">
+        <div class="timeline-head">
+          <h2 id="timeline-title">한눈에 보는 전체 과정</h2>
+          <p>본식 후 앨범 도착까지 <strong>약 5~6개월</strong></p>
+        </div>
 
-        <ol class="track" aria-label="진행 기간">
-          <li>
-            <div class="bar"></div>
-            <span class="when">2~3주</span>
-            <span class="what">원본 전송</span>
-          </li>
-          <li class="you narrow">
-            <div class="bar"></div>
-            <span class="when">셀렉</span>
-            <span class="what">업로드</span>
-          </li>
-          <li>
-            <div class="bar"></div>
-            <span class="when">4~5개월</span>
-            <span class="what">순차 보정 후 보정본 전송</span>
-          </li>
-          <li class="narrow">
-            <div class="bar"></div>
-            <span class="when">약 1주</span>
-            <span class="what">인쇄·배송</span>
-          </li>
+        <ol class="rail" aria-label="기간별 진행 순서">
+          <li>2~3주</li>
+          <li class="you">셀렉</li>
+          <li>보정 4~5개월</li>
+          <li>1주<span class="end"></span></li>
         </ol>
+        <div class="rail-ends" aria-hidden="true">
+          <span>본식</span>
+          <span>앨범 도착</span>
+        </div>
 
-        <ul class="track-notes" aria-hidden="true">
-          <li><b>셀렉·업로드</b>원본을 받은 뒤 신랑신부님이 진행</li>
-          <li><b>약 1주</b>인쇄 요청 후 앨범 배송</li>
-        </ul>
-
-        <div class="legend">
-          <span><i></i>디어메모리가 진행</span>
+        <div class="rail-key">
+          <span><i></i>디어메모리가 진행해요</span>
           <span class="you"><i></i>신랑신부님이 해주실 일</span>
         </div>
       </section>
 
-      <ol class="steps">
-        <li class="step">
-          <div class="num">01</div>
-          <div class="step-body">
-            <span class="who">디어메모리</span>
-            <h3>스냅 원본과 안내 메일 받기</h3>
-            <p>촬영 원본과 안내사항을 메일로 보내드려요.</p>
-            <div class="point">
-              <ul>
+      <section class="process" aria-labelledby="process-title">
+        <div class="process-head">
+          <h2 id="process-title">진행 순서</h2>
+          <p>후보정부터 앨범 수령까지 6단계</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <div class="num">01</div>
+            <div>
+              <span class="who">디어메모리</span>
+              <h3>스냅 원본과 안내 메일 받기</h3>
+              <p>촬영 원본과 안내사항을 메일로 보내드려요.</p>
+              <ul class="details">
                 <li>원본 메일은 <strong>본식 후 2~3주 안에</strong> 보내드려요.</li>
                 <li>메일을 보낸 뒤 채널톡으로도 안내 메시지를 드려요.</li>
               </ul>
             </div>
-          </div>
-        </li>
+          </li>
 
-        <li class="step you">
-          <div class="num">02</div>
-          <div class="step-body">
-            <span class="who">신랑신부님</span>
-            <h3>사진 셀렉 후 클라우드 업로드</h3>
-            <p>마음에 드는 사진을 고르신 뒤, 메일에 안내된 클라우드 링크로 업로드해 주세요.</p>
-            <div class="filename">
-              <div class="rule">파일명은 <strong>본식날짜_신부님 성함</strong>으로 적어주세요.</div>
-              <div class="example"><span>예시</span><b>20260504_김세리</b></div>
+          <li class="step you">
+            <div class="num">02</div>
+            <div>
+              <span class="who">신랑신부님</span>
+              <h3>사진 셀렉 후 클라우드 업로드</h3>
+              <p>마음에 드는 사진을 고르신 뒤, 메일에 안내된 클라우드 링크로 업로드해 주세요. 파일명은 <strong>본식날짜_신부님 성함</strong>으로 적어주세요.</p>
+              <div class="file">
+                <svg viewBox="0 0 28 34" aria-hidden="true">
+                  <path d="M3 1h15l9 9v21a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2z" fill="#fff" stroke="#9a968e" stroke-width="1.4"/>
+                  <path d="M18 1v7a2 2 0 0 0 2 2h7" fill="none" stroke="#9a968e" stroke-width="1.4"/>
+                </svg>
+                <div>
+                  <span class="label">파일명 예시</span>
+                  <span class="name">20260504<span>_</span>김세리</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </li>
+          </li>
 
-        <li class="step you">
-          <div class="num">03</div>
-          <div class="step-body">
-            <span class="who">신랑신부님</span>
-            <h3>채널톡으로 업로드 완료 알림</h3>
-            <p>디어메모리 채널톡으로 업로드가 끝났다고 메시지를 보내주시면 접수가 확인돼요.</p>
-          </div>
-        </li>
+          <li class="step you">
+            <div class="num">03</div>
+            <div>
+              <span class="who">신랑신부님</span>
+              <h3>채널톡으로 업로드 완료 알림</h3>
+              <p>디어메모리 채널톡으로 업로드가 끝났다고 메시지를 보내주시면 접수가 확인돼요.</p>
+            </div>
+          </li>
 
-        <li class="step">
-          <div class="num">04</div>
-          <div class="step-body">
-            <span class="who">디어메모리</span>
-            <h3>4~5개월 후 보정본 메일 받기</h3>
-            <p>순서대로 보정 작업을 진행하고, 완료되면 보정본을 메일로 보내드려요.</p>
-          </div>
-        </li>
+          <li class="step">
+            <div class="num">04</div>
+            <div>
+              <span class="who">디어메모리</span>
+              <h3>4~5개월 후 보정본 메일 받기</h3>
+              <p>순서대로 보정 작업을 진행하고, 완료되면 보정본을 메일로 보내드려요.</p>
+            </div>
+          </li>
 
-        <li class="step you">
-          <div class="num">05</div>
-          <div class="step-body">
-            <span class="who">신랑신부님</span>
-            <h3>이상 없으면 인쇄 요청 회신</h3>
-            <p>보정본을 확인하시고 문제가 없으면, 인쇄를 요청하는 답메일을 보내주세요.</p>
-          </div>
-        </li>
+          <li class="step you">
+            <div class="num">05</div>
+            <div>
+              <span class="who">신랑신부님</span>
+              <h3>이상 없으면 인쇄 요청 회신</h3>
+              <p>보정본을 확인하시고 문제가 없으면, 인쇄를 요청하는 답메일을 보내주세요.</p>
+            </div>
+          </li>
 
-        <li class="step">
-          <div class="num">06</div>
-          <div class="step-body">
-            <span class="who">디어메모리</span>
-            <h3>집에서 앨범 택배 받기</h3>
-            <p>인쇄 요청 후 약 일주일 뒤, 자택으로 앨범을 보내드려요.</p>
-            <div class="point">
-              <ul>
+          <li class="step">
+            <div class="num">06</div>
+            <div>
+              <span class="who">디어메모리</span>
+              <h3>집에서 앨범 택배 받기</h3>
+              <p>인쇄 요청 후 약 일주일 뒤, 자택으로 앨범을 보내드려요.</p>
+              <ul class="details">
                 <li>택배는 <strong>주소 1곳</strong>으로 보내드려요.</li>
                 <li>보내기 전에 주소를 한 번 더 확인해 드려요.</li>
                 <li>여러 주소로 받고 싶으시면 따로 문의해 주세요.</li>
               </ul>
             </div>
-          </div>
-        </li>
-      </ol>
+          </li>
+        </ol>
+      </section>
 
       <div class="notes">
         <section class="note">
@@ -523,11 +597,14 @@
         </section>
       </div>
     </main>
-
-    <footer>
-      <p class="wordmark">Dear Memory</p>
-      <p>문의사항은 언제든 채널톡으로 편하게 연락 주세요.</p>
-    </footer>
   </div>
+
+  <footer>
+    <div class="wrap">
+      <p class="brand">Dear Memory</p>
+      <p class="contact">문의사항은 언제든 <strong>채널톡</strong>으로 편하게 연락 주세요.</p>
+      <p class="copy">© Dear Memory</p>
+    </div>
+  </footer>
 </body>
 </html>
