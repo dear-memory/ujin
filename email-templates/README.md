@@ -5,6 +5,7 @@
 | 이름 | 용도 | 붙여넣을 소스 | 미리보기 |
 |---|---|---|---|
 | **깔끔1** | 보정본 전달 안내 (가이드 페이지 스타일, 흑백·타임라인) | `깔끔1/source.html` | `깔끔1/preview.html`, `깔끔1/preview-mobile.png`, `깔끔1/preview-pc.png` |
+| **웜톤1** | 보정본 전달 안내 (예약 사이트 스타일, 크림·브라운 톤, 둥근 카드 + 체크리스트) | `웜톤1/source.html` | `웜톤1/preview.html`, `웜톤1/preview-mobile.png`, `웜톤1/preview-pc.png` |
 | (이전 버전) | 보정본 전달 안내 (컬러 이모지 픽토그램) | `retouch-delivery.html` | `retouch-delivery-preview-*.png` |
 
 ## 깔끔1
@@ -12,3 +13,9 @@
 - 온라인 미리보기: https://claude.ai/artifact/XBwSunUBzVpHgogqAPUSwg (비공개)
 - 보낼 때마다 바꿀 곳: `김소연 신부님`(이름), `80장`(부부 앨범 수), `각각 40장씩`·`친정 40장`·`시댁 40장`(부모님 앨범 수)
 - `build.py`: 소스를 다시 생성하는 스크립트 (`python3 build.py` → `daum-retouch-v3.html`)
+
+## 웜톤1
+
+- 온라인 미리보기: https://claude.ai/artifact/E11Bi1czkbwZQvssCqrTKr (비공개)
+- 보낼 때마다 바꿀 곳: `김소연 신부님`(이름), `80장`(부부 앨범 수), `각각 40장씩`(부모님 앨범 수, 본문과 체크리스트 두 곳)
+- `build.py`: 소스를 다시 생성하는 스크립트 (`python3 build.py` → `daum-retouch-warm.html`)
