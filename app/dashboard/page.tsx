@@ -139,6 +139,7 @@ export default function Dashboard() {
                 <p>저장된 계약서가 없습니다.</p>
               </div>
             ) : (
+              <div className={styles.tableWrapper}>
               <table>
                 <thead>
                   <tr>
@@ -177,6 +178,7 @@ export default function Dashboard() {
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
         </div>

@@ -118,18 +118,18 @@
   border-radius: 8px;
 }
 
-table {
+.tableWrapper table {
   width: 100%;
   border-collapse: collapse;
   background: var(--card);
 }
 
-thead {
+.tableWrapper thead {
   background: var(--brass-soft);
   border-bottom: 2px solid var(--line);
 }
 
-thead th {
+.tableWrapper thead th {
   padding: 14px 12px;
   text-align: left;
   font-size: 13px;
@@ -138,16 +138,16 @@ thead th {
   letter-spacing: -0.01em;
 }
 
-tbody tr {
+.tableWrapper tbody tr {
   border-bottom: 1px solid var(--line);
   transition: background-color 0.15s ease;
 }
 
-tbody tr:hover {
+.tableWrapper tbody tr:hover {
   background-color: #fafaf9;
 }
 
-tbody td {
+.tableWrapper tbody td {
   padding: 14px 12px;
   font-size: 13px;
   color: var(--ink-soft);
@@ -317,8 +317,8 @@ tbody td {
     font-size: 12px;
   }
 
-  thead th,
-  tbody td {
+  .tableWrapper thead th,
+  .tableWrapper tbody td {
     padding: 10px 8px;
   }
 

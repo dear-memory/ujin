@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import Link from 'next/link';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -36,7 +35,6 @@ export default function Home() {
       <GuideSection
         number="1"
         title="복장 안내"
-        icon="👗"
         items={[
           '상하의 모두 단정한 블랙 톤으로 착용 부탁드립니다. (검은색 운동화도 좋습니다.)',
           '반팔의 경우 셔츠는 가능하지만, 일반 반팔 티셔츠는 지양해 주시면 감사하겠습니다.',
