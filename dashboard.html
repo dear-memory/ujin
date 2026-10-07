@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>디어메모리 - 관리자 대시보드</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #faf8f4;
+      --card: #ffffff;
+      --ink: #201d18;
+      --ink-soft: #565145;
+      --ink-faint: #948d7d;
+      --line: #e6e0d3;
+      --brass: #93712f;
+      --brass-soft: #f2e9d3;
+      --error: #d32f2f;
+      --success: #2e7d32;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .dashboard-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dashboard-header {
+      background: var(--card);
+      border-bottom: 2px solid var(--brass);
+      padding: 28px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .dashboard-header h1 {
+      font-family: "Noto Serif KR", serif;
+      font-size: 26px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .logout-btn {
+      padding: 10px 16px;
+      background-color: var(--error);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #b71c1c;
+    }
+
+    .dashboard-content {
+      flex: 1;
+      padding: 28px 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .contracts-section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 28px;
+    }
+
+    .contracts-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .contracts-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .contracts-count {
+      background-color: var(--brass-soft);
+      color: var(--brass);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .filter-container {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-input {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .filter-input:focus {
+      outline: none;
+      border-color: var(--brass);
+      background: var(--card);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+    }
+
+    thead {
+      background: var(--brass-soft);
+      border-bottom: 2px solid var(--line);
+    }
+
+    thead th {
+      padding: 14px 12px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brass);
+      letter-spacing: -0.01em;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--line);
+      transition: background-color 0.15s ease;
+    }
+
+    tbody tr:hover {
+      background-color: #fafaf9;
+    }
+
+    tbody td {
+      padding: 14px 12px;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .status-pending {
+      background-color: rgba(147, 113, 47, 0.15);
+      color: var(--brass);
+    }
+
+    .status-confirmed {
+      background-color: rgba(46, 125, 50, 0.15);
+      color: var(--success);
+    }
+
+    .row-click {
+      cursor: pointer;
+    }
+
+    .row-click:hover {
+      background-color: #f5f3f0 !important;
+    }
+
+    .detail-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .detail-modal.show {
+      display: flex;
+    }
+
+    .detail-content {
+      background: var(--card);
+      border-radius: 12px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .detail-header {
+      padding: 24px;
+      border-bottom: 2px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .detail-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--ink-soft);
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .close-btn:hover {
+      background-color: var(--paper);
+    }
+
+    .detail-body {
+      padding: 24px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+      align-items: start;
+    }
+
+    .detail-label {
+      font-weight: 700;
+      color: var(--brass);
+      font-size: 13px;
+      letter-spacing: -0.01em;
+    }
+
+    .detail-value {
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--ink-faint);
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--ink-soft);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--line);
+      border-top-color: var(--brass);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .detail-row {
+        grid-template-columns: 100px 1fr;
+        gap: 12px;
+      }
+
+      .table-container {
+        font-size: 12px;
+      }
+
+      thead th, tbody td {
+        padding: 10px 8px;
+      }
+
+      .filter-container {
+        flex-direction: column;
+      }
+
+      .filter-input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <div class="dashboard-header">
+      <h1>📋 계약서 관리</h1>
+      <div class="header-actions">
+        <button class="logout-btn" id="logoutBtn">로그아웃</button>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <div class="contracts-section">
+        <div class="contracts-header">
+          <h2>본식스냅 계약서 목록</h2>
+          <div class="contracts-count">
+            총 <span id="totalCount">0</span>건
+          </div>
+        </div>
+
+        <div class="filter-container">
+          <input
+            type="text"
+            class="filter-input"
+            id="searchFilter"
+            placeholder="신랑/신부 성함으로 검색..."
+          >
+        </div>
+
+        <div class="table-container">
+          <table id="contractsTable">
+            <thead>
+              <tr>
+                <th style="width: 15%;">신랑</th>
+                <th style="width: 15%;">신부</th>
+                <th style="width: 18%;">본식 날짜</th>
+                <th style="width: 18%;">웨딩홀</th>
+                <th style="width: 15%;">시간</th>
+                <th style="width: 10%;">상태</th>
+              </tr>
+            </thead>
+            <tbody id="contractsBody">
+              <tr>
+                <td colspan="6" class="loading">
+                  <div class="spinner"></div>
+                  데이터를 불러오는 중입니다...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 상세 정보 모달 -->
+  <div class="detail-modal" id="detailModal">
+    <div class="detail-content">
+      <div class="detail-header">
+        <h3>계약서 상세 정보</h3>
+        <button class="close-btn" id="closeDetailBtn">&times;</button>
+      </div>
+      <div class="detail-body" id="detailBody">
+        <!-- 동적으로 채워짐 -->
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBfgL7gC-uQeeH2bBB4q2JRTnk2ooRTZF8",
+      authDomain: "mkstroy-3dc7e.firebaseapp.com",
+      projectId: "mkstroy-3dc7e",
+      storageBucket: "mkstroy-3dc7e.firebasestorage.app",
+      messagingSenderId: "1041941827601",
+      appId: "1:1041941827601:web:4004c163fdd00586afa1b0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let allContracts = [];
+
+    // 로그인 확인
+    window.addEventListener('load', () => {
+      const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+      if (!isLoggedIn) {
+        window.location.href = 'admin.html';
+      }
+    });
+
+    // 로그아웃
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('adminLoggedIn');
+      localStorage.removeItem('adminLoginTime');
+      window.location.href = 'admin.html';
+    });
+
+    // 데이터 불러오기
+    async function loadContracts() {
+      try {
+        const contractsRef = collection(db, 'contracts');
+        const q = query(contractsRef, orderBy('submittedAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+
+        allContracts = [];
+        querySnapshot.forEach((doc) => {
+          allContracts.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+
+        displayContracts(allContracts);
+        updateCount();
+      } catch (error) {
+        console.error('데이터 로드 실패:', error);
+        showEmptyState('데이터를 불러오는데 실패했습니다.');
+      }
+    }
+
+    function displayContracts(contracts) {
+      const tbody = document.getElementById('contractsBody');
+
+      if (contracts.length === 0) {
+        showEmptyState('저장된 계약서가 없습니다.');
+        return;
+      }
+
+      tbody.innerHTML = contracts.map(contract => `
+        <tr class="row-click" onclick="showDetails('${contract.id}')">
+          <td>${contract.groomName || '-'}</td>
+          <td>${contract.brideName || '-'}</td>
+          <td>${contract.weddingDate || '-'}</td>
+          <td>${contract.weddingVenue ? contract.weddingVenue + ' / ' + (contract.weddingHall || '') : '-'}</td>
+          <td>${contract.weddingTime || '-'}</td>
+          <td>
+            <span class="status-badge ${contract.status === 'confirmed' ? 'status-confirmed' : 'status-pending'}">
+              ${contract.status === 'confirmed' ? '확정' : '대기'}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function showEmptyState(message) {
+      const tbody = document.getElementById('contractsBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/>
+            </svg>
+            <p>${message}</p>
+          </td>
+        </tr>
+      `;
+    }
+
+    function updateCount() {
+      document.getElementById('totalCount').textContent = allContracts.length;
+    }
+
+    window.showDetails = function(contractId) {
+      const contract = allContracts.find(c => c.id === contractId);
+      if (!contract) return;
+
+      const detailBody = document.getElementById('detailBody');
+      detailBody.innerHTML = `
+        <div class="detail-row">
+          <div class="detail-label">신랑 성함</div>
+          <div class="detail-value">${contract.groomName || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">신랑 연락처</div>
+          <div class="detail-value">${contract.groomPhone || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">신부 성함</div>
+          <div class="detail-value">${contract.brideName || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">신부 연락처</div>
+          <div class="detail-value">${contract.bridePhone || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">이메일</div>
+          <div class="detail-value">${contract.customerEmail || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">본식 날짜</div>
+          <div class="detail-value">${contract.weddingDate || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">예식장</div>
+          <div class="detail-value">${contract.weddingVenue || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">홀 이름</div>
+          <div class="detail-value">${contract.weddingHall || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">예식 시간</div>
+          <div class="detail-value">${contract.weddingTime || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">상품구성</div>
+          <div class="detail-value">${contract.snapPackage || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">촬영 요청사항</div>
+          <div class="detail-value">${contract.shootingRequests || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">보정 요청사항</div>
+          <div class="detail-value">${contract.editingRequests || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">기타 요청사항</div>
+          <div class="detail-value">${contract.otherRequests || '-'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">제출 시간</div>
+          <div class="detail-value">${new Date(contract.submittedAt).toLocaleString('ko-KR')}</div>
+        </div>
+      `;
+
+      document.getElementById('detailModal').classList.add('show');
+    };
+
+    // 모달 닫기
+    document.getElementById('closeDetailBtn').addEventListener('click', () => {
+      document.getElementById('detailModal').classList.remove('show');
+    });
+
+    document.getElementById('detailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'detailModal') {
+        document.getElementById('detailModal').classList.remove('show');
+      }
+    });
+
+    // 검색 필터
+    document.getElementById('searchFilter').addEventListener('keyup', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const filtered = allContracts.filter(contract =>
+        (contract.groomName || '').toLowerCase().includes(searchTerm) ||
+        (contract.brideName || '').toLowerCase().includes(searchTerm)
+      );
+      displayContracts(filtered);
+    });
+
+    // 초기 로드
+    loadContracts();
+  </script>
+</body>
+</html>

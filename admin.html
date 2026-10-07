@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>디어메모리 - 관리자 로그인</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #faf8f4;
+      --card: #ffffff;
+      --ink: #201d18;
+      --ink-soft: #565145;
+      --ink-faint: #948d7d;
+      --line: #e6e0d3;
+      --brass: #93712f;
+      --brass-soft: #f2e9d3;
+      --error: #d32f2f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Noto Sans KR", sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .login-container {
+      max-width: 400px;
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .login-header {
+      margin-bottom: 40px;
+    }
+
+    .login-header h1 {
+      font-family: "Noto Serif KR", serif;
+      font-weight: 700;
+      font-size: 28px;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.02em;
+    }
+
+    .login-header p {
+      font-size: 13px;
+      color: var(--ink-faint);
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .aperture-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .aperture-divider .line {
+      height: 1px;
+      background: var(--line);
+      flex: 1;
+    }
+
+    .aperture-divider svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--ink);
+      background: var(--paper);
+      transition: all 0.2s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--brass);
+      background: var(--card);
+      box-shadow: 0 0 0 2px rgba(147, 113, 47, 0.1);
+    }
+
+    .form-group input::placeholder {
+      color: var(--ink-faint);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px 20px;
+      background-color: var(--brass);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      letter-spacing: 0.02em;
+      margin-top: 8px;
+    }
+
+    .login-btn:hover {
+      background-color: #7a5f28;
+    }
+
+    .login-btn:disabled {
+      background-color: var(--ink-faint);
+      cursor: not-allowed;
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+      text-align: left;
+      padding: 12px;
+      background-color: rgba(211, 47, 47, 0.08);
+      border-radius: 6px;
+      border-left: 3px solid var(--error);
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .back-link {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .back-link a {
+      font-size: 13px;
+      color: var(--brass);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .back-link a:hover {
+      color: #7a5f28;
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 36px 24px;
+      }
+
+      .login-header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <h1>관리자 로그인</h1>
+      <p>본식스냅 계약서 관리</p>
+      <div class="aperture-divider">
+        <span class="line"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#93712f" stroke-width="1.6">
+          <circle cx="12" cy="12" r="9"/>
+          <polygon points="12,5 17,9 15,16 9,16 7,9" stroke-linejoin="round"/>
+        </svg>
+        <span class="line"></span>
+      </div>
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="adminPassword">관리자 비밀번호</label>
+        <input
+          type="password"
+          id="adminPassword"
+          placeholder="비밀번호를 입력하세요"
+          required
+        >
+      </div>
+
+      <div class="error-message" id="errorMessage">
+        비밀번호가 올바르지 않습니다.
+      </div>
+
+      <button type="submit" class="login-btn" id="loginBtn">
+        로그인
+      </button>
+    </form>
+
+    <div class="back-link">
+      <a href="index.html">← 돌아가기</a>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const adminPassword = document.getElementById('adminPassword');
+    const loginBtn = document.getElementById('loginBtn');
+    const errorMessage = document.getElementById('errorMessage');
+
+    const ADMIN_PASSWORD = 'dearmemory2024';
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errorMessage.classList.remove('show');
+
+      const enteredPassword = adminPassword.value.trim();
+
+      if (enteredPassword === ADMIN_PASSWORD) {
+        localStorage.setItem('adminLoggedIn', 'true');
+        localStorage.setItem('adminLoginTime', Date.now().toString());
+        window.location.href = 'dashboard.html';
+      } else {
+        errorMessage.classList.add('show');
+        adminPassword.value = '';
+        adminPassword.focus();
+      }
+    });
+
+    adminPassword.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        loginForm.dispatchEvent(new Event('submit'));
+      }
+    });
+
+    window.addEventListener('load', () => {
+      const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+      if (isLoggedIn) {
+        window.location.href = 'dashboard.html';
+      }
+    });
+  </script>
+</body>
+</html>
