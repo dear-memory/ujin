@@ -1,0 +1,150 @@
+.loginContainer {
+  max-width: 400px;
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 48px 40px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 50px auto;
+}
+
+.loginHeader {
+  margin-bottom: 40px;
+}
+
+.loginHeader h1 {
+  font-family: "Noto Serif KR", serif;
+  font-weight: 700;
+  font-size: 28px;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.02em;
+}
+
+.loginHeader p {
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin: 0;
+  font-weight: 400;
+}
+
+.apertureDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.line {
+  height: 1px;
+  background: var(--line);
+  flex: 1;
+}
+
+.line svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.formGroup {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  transition: all 0.2s ease;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--brass);
+  background: var(--card);
+  box-shadow: 0 0 0 2px rgba(147, 113, 47, 0.1);
+}
+
+.formGroup input::placeholder {
+  color: var(--ink-faint);
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: var(--brass);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  letter-spacing: 0.02em;
+  margin-top: 8px;
+}
+
+.loginBtn:hover {
+  background-color: #7a5f28;
+}
+
+.loginBtn:disabled {
+  background-color: var(--ink-faint);
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: var(--error);
+  font-size: 13px;
+  margin-top: 12px;
+  display: block;
+  text-align: left;
+  padding: 12px;
+  background-color: rgba(211, 47, 47, 0.08);
+  border-radius: 6px;
+  border-left: 3px solid var(--error);
+}
+
+.backLink {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.backLink a {
+  font-size: 13px;
+  color: var(--brass);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.backLink a:hover {
+  color: #7a5f28;
+}
+
+@media (max-width: 480px) {
+  .loginContainer {
+    padding: 36px 24px;
+    margin: 30px 20px;
+  }
+
+  .loginHeader h1 {
+    font-size: 24px;
+  }
+}

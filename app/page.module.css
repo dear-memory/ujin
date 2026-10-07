@@ -1,0 +1,152 @@
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+.header {
+  padding: 64px 0 40px;
+  text-align: center;
+}
+
+.brand {
+  font-family: "Noto Serif KR", serif;
+  font-weight: 700;
+  font-size: clamp(28px, 6vw, 36px);
+  letter-spacing: 0.02em;
+  margin: 0 0 8px;
+}
+
+.brandSub {
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin: 0;
+}
+
+.apertureDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 36px 0 0;
+}
+
+.line {
+  height: 1px;
+  background: var(--line);
+  flex: 1;
+  max-width: 120px;
+}
+
+.intro {
+  font-size: 15.5px;
+  color: var(--ink-soft);
+  padding: 32px 0 8px;
+  white-space: pre-line;
+}
+
+.guide {
+  margin-top: 28px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 28px 26px;
+}
+
+.guideHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.guideBadge {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--brass-soft);
+  color: var(--brass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.guideTitle {
+  font-family: "Noto Serif KR", serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.guideList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guideList li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 10px;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+}
+
+.guideList li:last-child {
+  margin-bottom: 0;
+}
+
+.guideList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--brass);
+}
+
+.closing {
+  margin-top: 40px;
+  text-align: center;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+
+.closing p {
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin: 0 0 6px;
+}
+
+.signature {
+  font-family: "Noto Serif KR", serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 14px;
+}
+
+.adminLogo {
+  cursor: pointer;
+  margin-top: 24px;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.adminLogo:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+  .guide {
+    padding: 22px 18px;
+  }
+  .header {
+    padding: 48px 0 28px;
+  }
+}
