@@ -294,22 +294,11 @@
   </div>
 
   <script>
-    let clickCount = 0;
-    let clickTimer;
     const adminLogo = document.getElementById('adminLogo');
 
-    adminLogo.addEventListener('click', () => {
-      clickCount++;
-      clearTimeout(clickTimer);
-
-      if (clickCount === 2) {
-        window.location.href = 'admin.html';
-        clickCount = 0;
-      } else {
-        clickTimer = setTimeout(() => {
-          clickCount = 0;
-        }, 300);
-      }
+    // 더블클릭 이벤트
+    adminLogo.addEventListener('dblclick', () => {
+      window.location.href = 'admin.html';
     });
   </script>
 </body>
