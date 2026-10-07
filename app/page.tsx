@@ -7,9 +7,13 @@ export default function Home() {
   useEffect(() => {
     const adminLogo = document.getElementById('adminLogo');
     if (adminLogo) {
-      adminLogo.addEventListener('dblclick', () => {
+      console.log('Admin logo found, attaching click listener');
+      adminLogo.addEventListener('click', () => {
+        console.log('Logo clicked!');
         window.location.href = '/admin';
       });
+    } else {
+      console.log('Admin logo element not found');
     }
   }, []);
 
