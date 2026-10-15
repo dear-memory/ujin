@@ -37,10 +37,29 @@ test('점 형식 날짜와 24시간 시간, 한 줄에 두 라벨', () => {
   assert.equal(r.venue, '그랜드힐컨벤션');
 });
 
-test('라벨이 없으면 계약일을 피하고 파일명 날짜를 우선', () => {
+test('본식 날짜 항목이 없으면 문서의 다른 날짜를 쓰지 않음', () => {
   const text = `계약일 2026-02-01\n2026-09-12 촬영 예정`;
   assert.equal(parseContract(text, 'DM_20260912_최.pdf').date, '2026-09-12');
-  assert.equal(parseContract(text, 'DM_최.pdf').date, '2026-09-12');
+  assert.equal(parseContract(text, 'DM_최.pdf').date, null);
+});
+
+test('계약서 폼 형식: 두 자리 연도 (27년 10월 26일 토요일)', () => {
+  const text = `본식 날짜*\n27년 10월 26일 토요일\n예식 시간*\n오후 3시 30분`;
+  const r = parseContract(text, 'DM 김.pdf');
+  assert.equal(r.date, '2027-10-26');
+  assert.equal(r.time, '15:30');
+});
+
+test('인쇄 머리글 날짜가 앞에 있어도 본식 날짜를 고름', () => {
+  const text = `26. 10. 15. 오후 3:12 디어메모리 본식스냅 계약서\n제 5조 계약일로부터 2026년 10월 20일까지\n본식 날짜*\n2027. 4. 18. 일요일`;
+  assert.equal(parseContract(text, 'DM 이.pdf').date, '2027-04-18');
+});
+
+test('연도 없는 날짜는 계약서 만든 날 이후로', () => {
+  const text = `본식 날짜 3월 14일 토요일`;
+  assert.equal(parseContract(text, 'DM 박.pdf', '2026-10-15T01:00:00Z').date, '2027-03-14');
+  assert.equal(parseContract(text.replace('3월', '11월'), 'DM 박.pdf', '2026-10-15T01:00:00Z').date, '2026-11-14');
+  assert.equal(parseContract(text, 'DM 박.pdf', '2026-10-15T01:00:00Z').dateSource, 'label-no-year');
 });
 
 test('파일명 날짜', () => {
@@ -83,4 +102,32 @@ test('디어메모리 계약서 양식 항목 이름', () => {
   assert.equal(r.venue, '더채플앳청담 루체홀');
   assert.equal(r.product, '기본 + 원판');
   assert.deepEqual(r.phones, ['010-1111-2222', '010-3333-4444']);
+});
+
+test('계약서 폼을 인쇄한 PDF (항목 다음 줄에 값, 머리글에 인쇄 날짜)', () => {
+  const text = `26. 10. 15.   오후   3:12   디어메모리   계약서
+제   3 조 . [ 계약금 ]
+신랑   성함   *
+홍길동
+신랑   연락처   *
+010-1111-2222
+신부   성함   *
+김영희
+본식   날짜   *
+27 년   10 월   26 일   토요일
+예식장   *
+더채플앳청담
+홀   이름   *
+루체홀
+예식   시간   *
+오후   3 시   30 분
+본식스냅   상품구성   *
+본식스냅   촬영   시   요청사항   ( 자세히 )   *`;
+  const r = parseContract(text, 'DM 홍길동.pdf');
+  assert.equal(r.date, '2027-10-26');
+  assert.equal(r.time, '15:30');
+  assert.equal(r.groom, '홍길동');
+  assert.equal(r.bride, '김영희');
+  assert.equal(r.venue, '더채플앳청담 루체홀');
+  assert.equal(r.product, null);
 });

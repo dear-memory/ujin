@@ -20,7 +20,7 @@ import {
   clearDriveToken,
 } from '@/lib/calendar/firebase';
 import { listContractFiles, downloadFile, DriveAuthError, DriveSetupError } from '@/lib/calendar/drive';
-import { parseContract, bookingTitle } from '@/lib/calendar/parseContract';
+import { parseContract, bookingTitle, PARSER_VERSION } from '@/lib/calendar/parseContract';
 import { loadBookings, saveParsed, saveOverrides, effective } from '@/lib/calendar/store';
 
 type Booking = {
@@ -45,6 +45,7 @@ type BookingRecord = {
   parsed?: Booking;
   overrides?: Partial<Record<EditableKey, string>>;
   textLength?: number;
+  parserVersion?: number;
 };
 
 const EDITABLE = ['date', 'time', 'groom', 'bride', 'venue', 'product', 'memo'] as const;
@@ -63,7 +64,7 @@ const FIELD_LABELS: Record<EditableKey, string> = {
 const SOURCE_TEXT: Record<string, string> = {
   label: '계약서의 본식 날짜 항목에서 날짜를 찾았습니다.',
   'file-name': '파일 이름에서 날짜를 찾았습니다.',
-  'first-date': '날짜 항목이 없어 계약서의 첫 날짜를 썼습니다. 맞는지 확인해 주세요.',
+  'label-no-year': '본식 날짜에 연도가 없어 계약서를 만든 날 이후 가장 가까운 해로 넣었습니다. 맞는지 확인해 주세요.',
 };
 
 const won = (n?: number) => (n ? `${n.toLocaleString('ko-KR')}원` : '');
@@ -109,7 +110,8 @@ export default function CalendarApp() {
     [visible],
   );
 
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   const upcoming = visible
     .filter(({ b }) => b.date && b.date >= today)
     .sort((a, z) => (a.b.date + (a.b.time || '')).localeCompare(z.b.date + (z.b.time || '')))
@@ -133,7 +135,11 @@ export default function CalendarApp() {
       const files = await listContractFiles(token);
       setLiveIds(new Set(files.map((f) => f.id)));
       const known = await loadBookings(u.uid);
-      const todo = files.filter((f) => known.get(f.id)?.modifiedTime !== f.modifiedTime);
+      // 새 파일, 수정된 파일, 예전 규칙으로 분석한 파일을 다시 분석합니다.
+      const todo = files.filter((f) => {
+        const r = known.get(f.id);
+        return !r || r.modifiedTime !== f.modifiedTime || r.parserVersion !== PARSER_VERSION;
+      });
       const total = todo.length;
       let done = 0;
       let failed = 0;
@@ -145,7 +151,7 @@ export default function CalendarApp() {
           try {
             const bytes = await downloadFile(file.id, token);
             const text = await extractText(bytes);
-            const parsed = parseContract(text, file.name);
+            const parsed = parseContract(text, file.name, file.createdTime || file.modifiedTime);
             await saveParsed(u.uid, file, parsed, text.length);
             setRecords((prev) => {
               const next = new Map(prev);
@@ -155,6 +161,7 @@ export default function CalendarApp() {
                 modifiedTime: file.modifiedTime,
                 webViewLink: file.webViewLink,
                 parsed,
+                parserVersion: PARSER_VERSION,
                 textLength: text.length,
               });
               return next;
