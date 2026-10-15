@@ -14,10 +14,12 @@ import {
   signIn,
   logOut,
   getDriveToken,
+  getDriveEmail,
   reconnectDrive,
+  authErrorMessage,
   clearDriveToken,
 } from '@/lib/calendar/firebase';
-import { listContractFiles, downloadFile, DriveAuthError } from '@/lib/calendar/drive';
+import { listContractFiles, downloadFile, DriveAuthError, DriveSetupError } from '@/lib/calendar/drive';
 import { parseContract, bookingTitle } from '@/lib/calendar/parseContract';
 import { loadBookings, saveParsed, saveOverrides, effective } from '@/lib/calendar/store';
 
@@ -77,6 +79,9 @@ export default function CalendarApp() {
   const [liveIds, setLiveIds] = useState<Set<string> | null>(null);
   const [status, setStatus] = useState('');
   const [needsDrive, setNeedsDrive] = useState(false);
+  // 배너에 띄울 Drive 관련 안내 (만료, 권한 없음, API 꺼짐 등)
+  const [driveNotice, setDriveNotice] = useState('');
+  const [driveEmail, setDriveEmail] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [openId, setOpenId] = useState<string | null>(null);
@@ -114,10 +119,13 @@ export default function CalendarApp() {
   const sync = useCallback(async (u: User) => {
     if (syncingRef.current) return;
     const token = getDriveToken();
+    setDriveEmail(getDriveEmail());
     if (!token) {
       setNeedsDrive(true);
+      setDriveNotice('Drive 연결이 만료되었습니다. 새 계약서를 불러오려면 다시 연결해 주세요.');
       return;
     }
+    setDriveNotice('');
     syncingRef.current = true;
     setSyncing(true);
     try {
@@ -152,7 +160,7 @@ export default function CalendarApp() {
               return next;
             });
           } catch (e) {
-            if (e instanceof DriveAuthError) throw e;
+            if (e instanceof DriveAuthError || e instanceof DriveSetupError) throw e;
             failed++;
             console.error(file.name, e);
           }
@@ -167,6 +175,10 @@ export default function CalendarApp() {
       if (e instanceof DriveAuthError) {
         clearDriveToken();
         setNeedsDrive(true);
+        setDriveNotice(e.message);
+        setStatus('');
+      } else if (e instanceof DriveSetupError) {
+        setDriveNotice(e.message);
         setStatus('');
       } else {
         setStatus(`불러오기 실패: ${(e as Error).message}`);
@@ -201,7 +213,7 @@ export default function CalendarApp() {
     try {
       await signIn();
     } catch (e) {
-      setLoginError(`로그인하지 못했습니다: ${(e as Error).message}`);
+      setLoginError(`로그인하지 못했습니다. ${authErrorMessage(e)}`);
     }
   };
 
@@ -209,9 +221,11 @@ export default function CalendarApp() {
     try {
       await reconnectDrive();
       setNeedsDrive(false);
+      setDriveNotice('');
+      setDriveEmail(getDriveEmail());
       if (user) sync(user);
     } catch (e) {
-      setStatus(`Drive 연결 실패: ${(e as Error).message}`);
+      setDriveNotice(`Drive를 연결하지 못했습니다. ${authErrorMessage(e)}`);
     }
   };
 
@@ -267,7 +281,13 @@ export default function CalendarApp() {
           <button className={styles.btn} disabled={syncing} onClick={() => sync(user)}>
             계약서 다시 불러오기
           </button>
-          <span className={styles.muted}>{user.email}</span>
+          <span className={styles.muted}>
+            {user.email}
+            {driveEmail && driveEmail !== user.email && ` · Drive: ${driveEmail}`}
+          </span>
+          <button className={styles.ghostBtn} onClick={handleReconnect}>
+            Drive 계정 바꾸기
+          </button>
           <button className={styles.ghostBtn} onClick={() => logOut()}>
             로그아웃
           </button>
@@ -275,12 +295,18 @@ export default function CalendarApp() {
       </header>
 
       <main className={styles.main}>
-        {needsDrive && (
+        {driveNotice && (
           <div className={styles.banner}>
-            Drive 연결이 만료되었습니다. 새 계약서를 불러오려면 다시 연결해 주세요.
-            <button className={styles.primaryBtn} onClick={handleReconnect}>
-              Drive 다시 연결
-            </button>
+            {driveNotice}
+            {needsDrive ? (
+              <button className={styles.primaryBtn} onClick={handleReconnect}>
+                Drive 다시 연결
+              </button>
+            ) : (
+              <button className={styles.btn} disabled={syncing} onClick={() => sync(user)}>
+                다시 시도
+              </button>
+            )}
           </div>
         )}
         <div className={styles.layout}>
