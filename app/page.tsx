@@ -1,21 +1,23 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 
 export default function Home() {
+  const router = useRouter();
   useEffect(() => {
     const adminLogo = document.getElementById('adminLogo');
     if (adminLogo) {
       console.log('Admin logo found, attaching click listener');
       adminLogo.addEventListener('click', () => {
         console.log('Logo clicked!');
-        window.location.href = '/admin';
+        router.push('/admin');
       });
     } else {
       console.log('Admin logo element not found');
     }
-  }, []);
+  }, [router]);
 
   return (
     <div className={styles.wrap}>

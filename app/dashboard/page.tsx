@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import styles from './dashboard.module.css';
 
 interface Contract {
@@ -103,9 +104,9 @@ export default function Dashboard() {
       <div className={styles.dashboardHeader}>
         <h1>📋 계약서 관리</h1>
         <div className={styles.headerActions}>
-          <a className={styles.calendarLink} href="/calendar">
+          <Link className={styles.calendarLink} href="/calendar">
             예약 캘린더
-          </a>
+          </Link>
           <button className={styles.logoutBtn} onClick={handleLogout}>
             로그아웃
           </button>
