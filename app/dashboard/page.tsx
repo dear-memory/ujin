@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import styles from './dashboard.module.css';
 
 interface Contract {
@@ -44,7 +45,7 @@ export default function Dashboard() {
   const loadContracts = async () => {
     try {
       // Firebase SDK 동적 로드
-      const { initializeApp } = await import('firebase/app');
+      const { initializeApp, getApps } = await import('firebase/app');
       const { getFirestore, collection, getDocs, query, orderBy } = await import('firebase/firestore');
 
       const firebaseConfig = {
@@ -56,7 +57,8 @@ export default function Dashboard() {
         appId: '1:1041941827601:web:4004c163fdd00586afa1b0',
       };
 
-      const app = initializeApp(firebaseConfig);
+      // 다른 페이지(예약 캘린더)에서 이미 초기화했으면 그 앱을 다시 씁니다.
+      const app = getApps()[0] || initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
       const contractsRef = collection(db, 'contracts');
@@ -103,6 +105,9 @@ export default function Dashboard() {
       <div className={styles.dashboardHeader}>
         <h1>📋 계약서 관리</h1>
         <div className={styles.headerActions}>
+          <Link className={styles.calendarLink} href="/calendar">
+            예약 캘린더
+          </Link>
           <button className={styles.logoutBtn} onClick={handleLogout}>
             로그아웃
           </button>

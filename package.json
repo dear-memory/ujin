@@ -4,17 +4,26 @@
   "description": "Dear Memory - Wedding Photography Booking",
   "main": "index.js",
   "scripts": {
+    "predev": "node scripts/copy-pdfjs.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/copy-pdfjs.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node --test test/*.test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fullcalendar/core": "^6.1.21",
+    "@fullcalendar/daygrid": "^6.1.21",
+    "@fullcalendar/list": "^6.1.21",
+    "@fullcalendar/react": "^6.1.21",
+    "@fullcalendar/timegrid": "^6.1.21",
     "firebase": "^11.0.0",
     "next": "^15.0.0",
+    "pdfjs-dist": "^6.4.299",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

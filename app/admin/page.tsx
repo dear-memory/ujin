@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import styles from './admin.module.css';
 
 export default function AdminLogin() {
@@ -72,7 +73,7 @@ export default function AdminLogin() {
       </form>
 
       <div className={styles.backLink}>
-        <a href="/">← 돌아가기</a>
+        <Link href="/">← 돌아가기</Link>
       </div>
     </div>
   );
