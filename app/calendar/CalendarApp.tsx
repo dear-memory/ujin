@@ -63,7 +63,6 @@ const FIELD_LABELS: Record<EditableKey, string> = {
 
 const SOURCE_TEXT: Record<string, string> = {
   label: '계약서의 본식 날짜 항목에서 날짜를 찾았습니다.',
-  'file-name': '파일 이름에서 날짜를 찾았습니다.',
   'label-no-year': '본식 날짜에 연도가 없어 계약서를 만든 날 이후 가장 가까운 해로 넣었습니다. 맞는지 확인해 주세요.',
 };
 
