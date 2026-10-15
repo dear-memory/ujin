@@ -45,7 +45,7 @@ export default function Dashboard() {
   const loadContracts = async () => {
     try {
       // Firebase SDK 동적 로드
-      const { initializeApp } = await import('firebase/app');
+      const { initializeApp, getApps } = await import('firebase/app');
       const { getFirestore, collection, getDocs, query, orderBy } = await import('firebase/firestore');
 
       const firebaseConfig = {
@@ -57,7 +57,8 @@ export default function Dashboard() {
         appId: '1:1041941827601:web:4004c163fdd00586afa1b0',
       };
 
-      const app = initializeApp(firebaseConfig);
+      // 다른 페이지(예약 캘린더)에서 이미 초기화했으면 그 앱을 다시 씁니다.
+      const app = getApps()[0] || initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
       const contractsRef = collection(db, 'contracts');
