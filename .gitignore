@@ -34,3 +34,6 @@ lerna-debug.log*
 .idea
 *.swp
 *.swo
+
+# pdf.js 워커/cMap (빌드 때 node_modules에서 복사)
+public/pdfjs/

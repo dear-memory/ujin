@@ -103,6 +103,9 @@ export default function Dashboard() {
       <div className={styles.dashboardHeader}>
         <h1>📋 계약서 관리</h1>
         <div className={styles.headerActions}>
+          <a className={styles.calendarLink} href="/calendar">
+            예약 캘린더
+          </a>
           <button className={styles.logoutBtn} onClick={handleLogout}>
             로그아웃
           </button>

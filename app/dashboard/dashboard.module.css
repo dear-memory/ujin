@@ -30,6 +30,19 @@
   align-items: center;
 }
 
+.calendarLink {
+  padding: 10px 16px;
+  border: 1px solid var(--brass);
+  border-radius: 6px;
+  color: var(--brass);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.calendarLink:hover {
+  background: var(--brass-soft);
+}
+
 .logoutBtn {
   padding: 10px 16px;
   background-color: var(--error);
