@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseContract, dateFromFileName, findTime } from '../lib/calendar/parseContract.js';
+import { parseContract, findTime } from '../lib/calendar/parseContract.js';
 
 test('라벨이 있는 일반적인 계약서', () => {
   const text = `디어메모리 본식스냅 촬영 계약서
@@ -39,7 +39,7 @@ test('점 형식 날짜와 24시간 시간, 한 줄에 두 라벨', () => {
 
 test('본식 날짜 항목이 없으면 문서의 다른 날짜를 쓰지 않음', () => {
   const text = `계약일 2026-02-01\n2026-09-12 촬영 예정`;
-  assert.equal(parseContract(text, 'DM_20260912_최.pdf').date, '2026-09-12');
+  assert.equal(parseContract(text, 'DM_20260912_최.pdf').date, null);
   assert.equal(parseContract(text, 'DM_최.pdf').date, null);
 });
 
@@ -62,11 +62,10 @@ test('연도 없는 날짜는 계약서 만든 날 이후로', () => {
   assert.equal(parseContract(text, 'DM 박.pdf', '2026-10-15T01:00:00Z').dateSource, 'label-no-year');
 });
 
-test('파일명 날짜', () => {
-  assert.equal(dateFromFileName('DM_20261107_홍길동.pdf'), '2026-11-07');
-  assert.equal(dateFromFileName('DM 261107 홍길동.pdf'), '2026-11-07');
-  assert.equal(dateFromFileName('DM 2026.11.7 홍길동.pdf'), '2026-11-07');
-  assert.equal(dateFromFileName('DM 홍길동.pdf'), null);
+test('파일명 날짜(계약일)는 본식 날짜로 쓰지 않음', () => {
+  const r = parseContract('신랑 홍길동 신부 김영희', 'DM_20261107_홍길동.pdf');
+  assert.equal(r.date, null);
+  assert.equal(r.dateSource, null);
 });
 
 test('시간 표기', () => {
