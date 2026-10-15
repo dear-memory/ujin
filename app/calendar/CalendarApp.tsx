@@ -86,6 +86,8 @@ export default function CalendarApp() {
   const [syncing, setSyncing] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [openId, setOpenId] = useState<string | null>(null);
+  // 이번 불러오기에서 읽지 못한 파일과 그 이유
+  const [failures, setFailures] = useState<{ id: string; name: string; link?: string; error: string }[]>([]);
   const syncingRef = useRef(false);
 
   const visible = useMemo(
@@ -143,6 +145,7 @@ export default function CalendarApp() {
       const total = todo.length;
       let done = 0;
       let failed = 0;
+      setFailures([]);
       // pdf.js는 무거워서 실제로 분석할 때만 불러옵니다.
       const { extractText } = total ? await import('@/lib/calendar/pdfText') : { extractText: null };
       const worker = async () => {
@@ -170,6 +173,8 @@ export default function CalendarApp() {
             if (e instanceof DriveAuthError || e instanceof DriveSetupError) throw e;
             failed++;
             console.error(file.name, e);
+            const error = (e as Error)?.message || String(e);
+            setFailures((prev) => [...prev, { id: file.id, name: file.name, link: file.webViewLink, error }]);
           }
           done++;
           setStatus(`계약서 분석 중 ${done}/${total}`);
@@ -342,12 +347,36 @@ export default function CalendarApp() {
             </h3>
             <p className={styles.small}>날짜를 찾지 못했습니다. 눌러서 직접 입력해 주세요.</p>
             <ItemList items={unparsed} label={({ record }) => record.fileName} empty="모두 확인되었습니다." onOpen={setOpenId} />
+            {failures.length > 0 && (
+              <>
+                <h3>
+                  읽지 못한 계약서 <span className={styles.pill}>{failures.length}</span>
+                </h3>
+                <ul className={styles.list}>
+                  {failures.map((f) => (
+                    <li key={f.id}>
+                      <a href={f.link || `https://drive.google.com/file/d/${f.id}/view`} target="_blank" rel="noopener noreferrer">
+                        {f.name}
+                      </a>
+                      <div className={styles.small}>{f.error}</div>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </aside>
         </div>
       </main>
 
       {openId && openRecord && (
-        <DetailDialog key={openId} id={openId} record={openRecord} onClose={() => setOpenId(null)} onSave={handleSave} />
+        <DetailDialog
+          key={openId}
+          id={openId}
+          record={openRecord}
+          onClose={() => setOpenId(null)}
+          onSave={handleSave}
+          loadText={loadText}
+        />
       )}
     </div>
   );
@@ -380,17 +409,29 @@ function ItemList({
   );
 }
 
+// 계약서 PDF에서 실제로 읽힌 글을 다시 꺼내 보여 줍니다. 날짜를 잘못 읽을 때 원인을 보기 위한 것입니다.
+async function loadText(id: string) {
+  const token = getDriveToken();
+  if (!token) throw new Error('Drive 연결이 만료되었습니다. Drive를 다시 연결해 주세요.');
+  const { extractText } = await import('@/lib/calendar/pdfText');
+  return extractText(await downloadFile(id, token));
+}
+
 function DetailDialog({
   id,
   record,
   onClose,
   onSave,
+  loadText,
 }: {
   id: string;
   record: BookingRecord;
   onClose: () => void;
   onSave: (id: string, values: Record<EditableKey, string>) => void;
+  loadText: (id: string) => Promise<string>;
 }) {
+  const [rawText, setRawText] = useState<string | null>(null);
+  const [rawState, setRawState] = useState('');
   const b = effective(record) as Booking;
   const [values, setValues] = useState(
     () => Object.fromEntries(EDITABLE.map((k) => [k, String(b[k] ?? '')])) as Record<EditableKey, string>,
@@ -449,6 +490,31 @@ function DetailDialog({
             ))}
           </dl>
         )}
+        <details
+          className={styles.rawText}
+          onToggle={(e) => {
+            if (!(e.currentTarget as HTMLDetailsElement).open || rawText !== null || rawState) return;
+            setRawState('PDF를 읽는 중…');
+            loadText(id)
+              .then((t) => {
+                setRawText(t);
+                setRawState('');
+              })
+              .catch((err) => setRawState(`읽기 실패: ${(err as Error).message}`));
+          }}
+        >
+          <summary>PDF에서 읽은 글 보기</summary>
+          {rawState && <p className={styles.small}>{rawState}</p>}
+          {rawText !== null &&
+            (rawText.trim() ? (
+              <>
+                <p className={styles.small}>{rawText.length}자</p>
+                <pre>{rawText}</pre>
+              </>
+            ) : (
+              <p className={styles.small}>글자가 하나도 없습니다. 글자가 아닌 이미지로 만들어진 PDF입니다.</p>
+            ))}
+        </details>
         <div className={styles.actions}>
           <button type="button" className={styles.ghostBtn} onClick={onClose}>
             닫기

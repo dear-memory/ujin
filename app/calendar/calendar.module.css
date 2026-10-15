@@ -294,3 +294,24 @@
     gap: 8px;
   }
 }
+
+.rawText {
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.rawText summary {
+  cursor: pointer;
+  color: var(--ink-faint);
+}
+
+.rawText pre {
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: 12px;
+  padding: 8px;
+  border: 1px solid var(--line, #ddd);
+  border-radius: 6px;
+}
