@@ -130,3 +130,27 @@ test('계약서 폼을 인쇄한 PDF (항목 다음 줄에 값, 머리글에 인
   assert.equal(r.venue, '더채플앳청담 루체홀');
   assert.equal(r.product, null);
 });
+
+test('이미지 계약서를 글자 인식(OCR)한 결과 (두 칸 배치, 전각 별표)', () => {
+  const text = `본식스냄 계약서
+신랑 성함 *                    신랑 연락처 *
+홍길동                                    010-1234-5678
+신부 성함 ＊                                신부 연락처 ＊
+김영희                                     010-8765-4321
+본식 날짜 ＊
+27년 10월 26일 토요일
+예식장 *                                   홀 이름 *
+보타닉파크웨딩                           카라홀
+예식 시간 *
+오후 3시 30분`;
+  const r = parseContract(text, 'DM-20261018-TW5E_촬영계약서.pdf', '2026-10-18T00:00:00Z');
+  assert.equal(r.date, '2027-10-26');
+  assert.equal(r.time, '15:30');
+  assert.equal(r.groom, '홍길동');
+  assert.equal(r.bride, '김영희');
+  assert.equal(r.venue, '보타닉파크웨딩 카라홀');
+});
+
+test('글자 인식 결과처럼 라벨 글자 사이가 띄어져 있어도 본식 날짜를 찾음', () => {
+  assert.equal(parseContract('본 식 날 짜 *\n2027년 3월 6일').date, '2027-03-06');
+});

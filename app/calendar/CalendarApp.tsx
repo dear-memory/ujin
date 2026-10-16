@@ -152,7 +152,9 @@ export default function CalendarApp() {
           const file = todo.shift();
           try {
             const bytes = await downloadFile(file.id, token);
-            const text = await extractText(bytes);
+            const text = await extractText(bytes, {
+              onOcr: (p: number, n: number) => setStatus(`계약서 분석 중 ${done + 1}/${total} · 이미지 글자 인식 ${p}/${n}쪽`),
+            });
             const parsed = parseContract(text, file.name, file.createdTime || file.modifiedTime);
             await saveParsed(u.uid, file, parsed, text.length);
             setRecords((prev) => {

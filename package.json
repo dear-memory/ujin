@@ -21,11 +21,13 @@
     "@fullcalendar/list": "^6.1.21",
     "@fullcalendar/react": "^6.1.21",
     "@fullcalendar/timegrid": "^6.1.21",
+    "@tesseract.js-data/kor": "^1.0.0",
     "firebase": "^11.0.0",
     "next": "^15.0.0",
     "pdfjs-dist": "^6.4.299",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "@types/react": "19.3.0"
