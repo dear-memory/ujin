@@ -37,3 +37,6 @@ lerna-debug.log*
 
 # pdf.js 워커/cMap (빌드 때 node_modules에서 복사)
 public/pdfjs/
+
+# 글자 인식(OCR) 파일 (빌드 때 node_modules에서 복사)
+public/tesseract/
